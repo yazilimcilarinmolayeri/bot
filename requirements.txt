@@ -1,0 +1,3 @@
+pip
+emoji==0.5.4
+discord.py==1.2.5
