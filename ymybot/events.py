@@ -1,13 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2019, Yazılımcıların Mola Yeri (ymy-gitrepo)
-#
-# This program is free software; you can redistribute it and/or modify it under
-# the terms of the GNU General Public License as published by the Free
-# Software Foundation; either version 2 of the License, or (at your option)
-# any later version.
-#
-# Please read the COPYING file.
+# Copyright (C) 2019-2020, Yazılımcıların Mola Yeri (ymydepo)
 #
 
 import config
@@ -34,8 +27,7 @@ class Events(commands.Cog):
     def get_role(self, guild, emoji):
         return get(guild.roles, name=role.roles[str(emoji)])
 
-    # Bu kodlara el atılacak. Asıl fonksiyonlar utils altına alınacak. Rol
-    # almak için tepki bıraktığında yada çektiğinde kullanıcıya özel mesaj atılacak
+    # Bu kodlara el atılacak. Asıl fonksiyonlar utils altına alınacak.
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
@@ -54,7 +46,9 @@ class Events(commands.Cog):
                 user = guild.get_member(user_id)
 
                 try:
-                    await user.add_roles(self.get_role(guild, self.get_emoji(emoji)))
+                    role = self.get_role(guild, self.get_emoji(emoji))
+                    await user.add_roles(role)
+                    await user.send(f"`{role}` adlı rol alındı!")
 
                 except KeyError:
                     channel = self.bot.get_channel(channel_id)
@@ -78,7 +72,9 @@ class Events(commands.Cog):
                 user = guild.get_member(user_id)
 
                 try:
-                    await user.remove_roles(self.get_role(guild, self.get_emoji(emoji)))
+                    role = self.get_role(guild, self.get_emoji(emoji))
+                    await user.remove_roles(role)
+                    await user.send(f"`{role}` adlı rol bırakıldı!")
 
                 except KeyError:
                     pass
