@@ -25,4 +25,4 @@ var/
 *.egg
 
 # Our configuration files
-config.py
+# config.py
