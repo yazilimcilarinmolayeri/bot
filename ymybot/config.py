@@ -10,16 +10,19 @@ prefix = "ymy+"
 token = environ.get("TOKEN")
 
 if token == None:
-    token = "TOKEN"
+    token = ""
 
-# print(token)
+cogs = [
+    "cogs.mod",
+    "cogs.info",
+    "cogs.help",
+    "cogs.fun",
+    "cogs.misc",
+    "cogs.admin",
+    "events",
+]
 
-cogs = ["cogs.mod", "cogs.info", "cogs.help", "cogs.fun", "cogs.misc", "events"]
-
-# cogs = [f"cogs.{i.split('.')[0]}" for i in listdir("cogs") if i.endswith("py")][
-#     :-1
-# ] + ["events"]
-
+# cogs = [f"cogs.{i.split('.')[0]}" for i in listdir("cogs") if i.endswith("py")] + ["events"]
 
 """Yazılımcıların Mola Yeri için özel değişkenler. Değişkenler dinamik 
 üretilecek şekilde olması için daha sonra bu kodlara el atılacak."""
