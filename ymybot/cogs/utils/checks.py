@@ -30,13 +30,6 @@ def is_owner():
     return commands.check(predicate)
 
 
-def is_admin():
-    def predicate(ctx):
-        return ctx.message.author.id in config.admin_ids
-
-    return commands.check(predicate)
-
-
 def is_mod():
     def predicate(ctx):
         return ctx.message.author.id in config.mod_ids

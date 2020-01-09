@@ -9,6 +9,20 @@ prefix = "ymy+"
 
 token = environ.get("TOKEN")
 
+"""
+GNU/Linux'da sistem değişkeni oluşturmak için yapmanız gerekenler:
+  Ev dizinize gidin.
+    $ cd ~
+  Ev dizinindeki .bashrc dosyasını düzenlemek için bir editör ile açın.
+    $ nano .bashrc
+  Dosyaya şunları ekleyin ve kaydedip çıkın.
+    TOKEN='TOKEN ANAHTARI'
+    export TOKEN
+  Daha sonra şu komutu çalıştırın.
+    $ source .bashrc
+  İşlem tamamdır sistem değişkeni kullanılabilir durumda.
+"""
+
 if token == None:
     token = ""
 
@@ -31,12 +45,9 @@ owner_ids = [
     428273380844765185,
 ]
 
-admin_ids = [
+mod_ids = [
     428273380844765185,
     335119989893890049,
-]
-
-mod_ids = [
     429276634072350720,
     272372123316649984,
     340872679047561216,
