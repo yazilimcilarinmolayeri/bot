@@ -34,6 +34,16 @@ class YMYBot(commands.Bot):
         print(f"Logged on as {self.user} (ID: {self.user.id})")
         print(f"discord.py version: {discord.__version__}")
 
+    async def on_command_error(self, ctx, error):
+        channel = ctx.message.channel
+
+        error_embed = discord.Embed(color=0x36393F)
+        error_embed.add_field(
+            name="Komut yürütülürken hata oluştu !", value=f"`{error}`", inline=True
+        )
+
+        await channel.send(embed=error_embed)
+
 
 def main():
     bot = YMYBot()
