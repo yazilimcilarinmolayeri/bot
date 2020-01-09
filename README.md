@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/ymy-gitrepo/ymybot/blob/master/assets/ymybot-banner.png"><br>
+  <img src="assets/ymybot-banner.png"><br>
   <img src="https://img.shields.io/github/languages/code-size/ymy-gitrepo/ymybot">
   <a href="https://discord.gg/KazHgb2">
     <img src="https://img.shields.io/discord/418887354699350028">

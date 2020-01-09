@@ -14,7 +14,7 @@ class Mod(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-    
+
     @checks.is_mod()
     @commands.command(aliases=["süpür"])
     async def clean(self, ctx, amount=1):
@@ -29,7 +29,7 @@ class Mod(commands.Cog):
         await channel.send(
             f"`{len(messages)}` mesaj başarıyla süpürüldü!", delete_after=3,
         )
-    
+
     @checks.is_mod()
     @commands.command(aliases=["yazdır"])
     async def print(self, ctx, channel: discord.TextChannel, *, content):
