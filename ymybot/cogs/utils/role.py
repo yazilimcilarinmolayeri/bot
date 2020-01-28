@@ -46,6 +46,7 @@ roles = {
     ":game_die:": "Game Maker",
     ":scroll:": "Kriptoloji",
     ":robot_face:": "Yapay Zeka",
+    ":floppy_disk:": "Donanım",
     ":smiling_face_with_sunglasses:": "Hacker",
     "626684328243625994": "GNU/Linux",
     ":radioactive:": "Windows",
