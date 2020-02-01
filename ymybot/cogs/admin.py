@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2019-2020, Yazılımcıların Mola Yeri (ymydepo)
+# Copyright (C) 2019-2020, Yazılımcıların Mola Yeri (ymy-discord)
 #
 
 import copy
@@ -38,6 +38,7 @@ class Admin(commands.Cog):
     @checks.is_owner()
     @commands.command(aliases=["yükle"], hidden=True)
     async def load(self, ctx, *, module):
+    	""" Modülü yükler """
         try:
             self.bot.load_extension(module)
         except commands.ExtensionError as e:
@@ -48,6 +49,7 @@ class Admin(commands.Cog):
     @checks.is_owner()
     @commands.command(aliases=["kaldır"], hidden=True)
     async def unload(self, ctx, *, module):
+    	""" Modülü pasif hale getirir"""
         try:
             self.bot.unload_extension(module)
         except commands.ExtensionError as e:
@@ -58,6 +60,7 @@ class Admin(commands.Cog):
     @checks.is_owner()
     @commands.command(aliases=["yenile"], hidden=True)
     async def reload(self, ctx, *, module):
+    	""" Modülü yeniden başlatır """
         try:
             self.bot.reload_extension(module)
         except commands.ExtensionError as e:
@@ -67,12 +70,14 @@ class Admin(commands.Cog):
 
     @commands.command(aliases=["kapat"], hidden=True)
     async def off(self, ctx):
+    	""" Botu kapatır """
         await ctx.send("Bot kapatılıyor...")
         await self.bot.logout()
 
     @checks.is_owner()
     @commands.command(aliases=["yap"], hidden=True)
     async def do(self, ctx, times: int, *, command):
+    	""" Komutları belirlenen sayıda tekrarlar """
         msg = copy.copy(ctx.message)
         msg.content = ctx.prefix + command
 
@@ -84,6 +89,7 @@ class Admin(commands.Cog):
     @checks.is_owner()
     @commands.command(aliases=["sh", "kabuk"], hidden=True)
     async def shell(self, ctx, *, command):
+    	""" Kabuk komutlarını çalıştıtır """
         async with ctx.typing():
             stdout, stderr = await self.run_process(command)
 

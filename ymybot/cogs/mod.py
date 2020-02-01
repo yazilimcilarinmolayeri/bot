@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2019-2020, Yazılımcıların Mola Yeri (ymydepo)
+# Copyright (C) 2019-2020, Yazılımcıların Mola Yeri (ymy-discord)
 #
 
 from cogs.utils import checks
@@ -18,6 +18,7 @@ class Mod(commands.Cog):
     @checks.is_mod()
     @commands.command(aliases=["süpür"])
     async def clean(self, ctx, amount=1):
+    	""" Belirlenen sayıda mesajı temizler """
         channel = ctx.message.channel
 
         messages = list()
@@ -27,12 +28,13 @@ class Mod(commands.Cog):
 
         await channel.delete_messages(messages)
         await channel.send(
-            f"`{len(messages)}` mesaj başarıyla süpürüldü!", delete_after=3,
+            f"`{len(messages)+1}` mesaj başarıyla süpürüldü!", delete_after=3,
         )
 
     @checks.is_mod()
     @commands.command(aliases=["yazdır"])
-    async def print(self, ctx, channel: discord.TextChannel, *, content):
+    async def echo(self, ctx, channel: discord.TextChannel, *, content):
+        """ Botun belirlenen kanala mesaj göndermesini sağlar """
         await channel.send(content)
 
 

@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2019-2020, Yazılımcıların Mola Yeri (ymydepo)
+# Copyright (C) 2019-2020, Yazılımcıların Mola Yeri (ymy-discord)
 #
 
 import time
+import requests
+from bs4 import BeautifulSoup
 
 from cogs.utils import emoji
 
@@ -17,8 +19,9 @@ class Misc(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(aliases=[])
+    @commands.command(aliases=["gecikme"])
     async def ping(self, ctx):
+    	""" Gecikme süresini hesaplar """
         before = time.monotonic()
         message = await ctx.send("Pinging...")
 
