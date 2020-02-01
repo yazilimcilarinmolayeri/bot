@@ -18,7 +18,7 @@ class Mod(commands.Cog):
     @checks.is_mod()
     @commands.command(aliases=["süpür"])
     async def clean(self, ctx, amount=1):
-    	""" Belirlenen sayıda mesajı temizler """
+        """ Belirlenen sayıda mesajı temizler """
         channel = ctx.message.channel
 
         messages = list()

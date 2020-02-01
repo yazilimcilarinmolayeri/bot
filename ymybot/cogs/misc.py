@@ -21,7 +21,7 @@ class Misc(commands.Cog):
 
     @commands.command(aliases=["gecikme"])
     async def ping(self, ctx):
-    	""" Gecikme süresini hesaplar """
+        """ Gecikme süresini hesaplar """
         before = time.monotonic()
         message = await ctx.send("Pinging...")
 
