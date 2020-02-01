@@ -31,7 +31,7 @@ async def member_counter(bot):
                 type=discord.ActivityType.watching, name=f"{members:,d} üyeyi"
             )
         )
-        await asyncio.sleep(1*60)
+        await asyncio.sleep(1 * 60)
 
 
 class YMYBot(commands.Bot):

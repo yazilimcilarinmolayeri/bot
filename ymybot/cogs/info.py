@@ -44,7 +44,7 @@ class Info(commands.Cog):
         lines, firstlineno = inspect.getsourcelines(src)
         if not module.startswith("discord"):
             # not a built-in command
-            location = os.path.relpath(filename).replace('\\', '/')
+            location = os.path.relpath(filename).replace("\\", "/")
         else:
             location = module.replace(".", "/") + ".py"
             source_url = "https://github.com/Rapptz/discord.py"
@@ -52,6 +52,7 @@ class Info(commands.Cog):
 
         final_url = f"<{source_url}/blob/{branch}/{location}#L{firstlineno}-L{firstlineno + len(lines) - 1}>"
         await ctx.send(final_url)
+
 
 def setup(bot):
     bot.add_cog(Info(bot))
