@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2019-2020, Yazılımcıların Mola Yeri (ymydepo)
+# Copyright (C) 2019-2020, Yazılımcıların Mola Yeri (ymy-discord)
 #
 
+import asyncio
 import config
 
 from discord.ext import commands
@@ -11,8 +12,26 @@ import discord
 
 
 description = """
-İhtiyaçlar dahilinde hazırlanmış çok amaçlı Discord botu.
+İhtiyaçlar dahilinde hazırlanmış çok amaçlı discord botu.
 """
+
+
+async def get_pre(bot, message):
+    return ["ymy+", "+"]
+
+
+async def member_counter(bot):
+    await bot.wait_until_ready()
+    guild = bot.get_guild(config.ymy_guild_id)
+
+    while True:
+        members = len(guild.members)
+        await bot.change_presence(
+            activity=discord.Activity(
+                type=discord.ActivityType.watching, name=f"{members:,d} üyeyi"
+            )
+        )
+        await asyncio.sleep(1)
 
 
 class YMYBot(commands.Bot):
@@ -34,20 +53,11 @@ class YMYBot(commands.Bot):
         print(f"Logged on as {self.user} (ID: {self.user.id})")
         print(f"discord.py version: {discord.__version__}")
 
-    async def on_command_error(self, ctx, error):
-        channel = ctx.message.channel
-
-        error_embed = discord.Embed(color=0x36393F)
-        error_embed.add_field(
-            name="Komut yürütülürken hata oluştu !", value=f"`{error}`", inline=True
-        )
-
-        await channel.send(embed=error_embed)
-
 
 def main():
     bot = YMYBot()
     bot.remove_command("help")
+    bot.loop.create_task(member_counter(bot))
     bot.run(config.token)
 
 
