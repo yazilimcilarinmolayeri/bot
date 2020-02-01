@@ -49,7 +49,7 @@ class Admin(commands.Cog):
     @checks.is_owner()
     @commands.command(aliases=["kaldır"], hidden=True)
     async def unload(self, ctx, *, module):
-        """ Modülü pasif hale getirir """
+        """ Modülü pasif hale getirir"""
         try:
             self.bot.unload_extension(module)
         except commands.ExtensionError as e:
