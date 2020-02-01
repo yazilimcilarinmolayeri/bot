@@ -4,9 +4,6 @@
 #
 
 import time
-import requests
-from bs4 import BeautifulSoup
-
 from cogs.utils import emoji
 
 from discord.ext import commands
