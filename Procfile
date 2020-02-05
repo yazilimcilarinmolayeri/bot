@@ -1,1 +1,1 @@
-worker: python3 ymybot/bot.py
+worker: python3 src/bot.py
