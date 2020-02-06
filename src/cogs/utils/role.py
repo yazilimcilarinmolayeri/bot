@@ -57,6 +57,7 @@ roles = {
     ":hammer_and_wrench:": "Discord Uzman",
     ":spider_web:": "Web Programlama",
     ":joystick:": "Oyun Programlama",
+    ":magnet:": "Tersine Mühendislik",
     ":wrench:": "Discord Bot Geliştirme",
     ":desktop:": "Masaüstü Programlama",
     ":green_apple:": "iOS Uygulama Geliştirme",
