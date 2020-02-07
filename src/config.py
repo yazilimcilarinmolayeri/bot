@@ -18,20 +18,20 @@ GNU/Linux'da sistem değişkeni oluşturmak için yapmanız gerekenler:
   İşlem tamamdır, sistem değişkeni kullanılabilir durumda.
 """
 
-token = environ.get('TOKEN')
+token = environ.get("TOKEN")
 
-# 
+#
 # Sistem değişkeni oluşturmak istemiyorsanız alttaki token değişkekine
 # bot tokenini yazınız...
 #
 
 if token == None:
-    token = 'TOKEN'
+    token = "TOKEN"
 
 #
-# Yazılımcıların Mola Yeri için özel değişkenler. Değişkenler dinamik 
+# Yazılımcıların Mola Yeri için özel değişkenler. Değişkenler dinamik
 # üretilecek şekilde olması için daha sonra bu kodlara el atılacak.
-# 
+#
 
 ymy_guild_id = 418887354699350028
 
