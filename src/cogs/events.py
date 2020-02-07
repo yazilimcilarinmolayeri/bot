@@ -49,11 +49,11 @@ class Events(commands.Cog):
             )
         elif isinstance(err, commands.CommandInvokeError):
             original = err.original
-            
+
             if not isinstance(original, discord.HTTPException):
-                print(f'In {ctx.command.qualified_name}:', file=sys.stderr)
+                print(f"In {ctx.command.qualified_name}:", file=sys.stderr)
                 traceback.print_tb(original.__traceback__)
-                print(f'{original.__class__.__name__}: {original}', file=sys.stderr)
+                print(f"{original.__class__.__name__}: {original}", file=sys.stderr)
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
