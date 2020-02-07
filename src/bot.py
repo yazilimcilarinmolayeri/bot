@@ -1,10 +1,12 @@
-#!/usr/bin/python3
+#!/usr/bin/python3.7
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2019-2020, Yazılımcıların Mola Yeri (ymy-discord)
+# 2019-2020, YMYBot - Yazılımcıların Mola Yeri (ymy-discord)
+# Davet bağlantısı: https://discord.gg/KazHgb2
 #
 
 import config
+import datetime
 
 from cogs.utils import meta
 
@@ -13,11 +15,11 @@ from discord.ext import commands
 
 
 description = """
-YMY (Yazılımcıların Mola Yeri) geliştiricileri tarafından sunucu ihtiyaçları için yazılmış botum.
+YMY (Yazılımcıların Mola Yeri) geliştiricileri tarafından sunucu ihtiyaçları için yazılmış bot.
 """
 
 extensions = [
-    "events",
+    "cogs.events",
     "cogs.help",
     "cogs.admin",
     "cogs.mod",
@@ -35,9 +37,13 @@ def get_prefix(bot, msg):
 class YMYBot(commands.Bot):
     def __init__(self):
         super().__init__(
-            command_prefix=get_prefix, description=description, case_insensitive=True,
+            command_prefix=get_prefix, description=description, case_insensitive=True
         )
 
+        # Bot sahiplerinin ID'sini bu listeye ekle.
+        self.owner_ids = set(
+            [428273380844765185, 335119989893890049, 429276634072350720,]
+        )
         self.embed_color = 0x36393F
 
         for cog in extensions:
@@ -46,9 +52,12 @@ class YMYBot(commands.Bot):
             except Exception as exc:
                 print(f"{cog} {exc.__class__.__name__}: {exc}")
 
+        if not hasattr(self, "uptime"):
+            self.uptime = datetime.datetime.utcnow()
+
     @property
-    def owner(self):
-        return self.get_user(self.owner_id)
+    def owners(self):
+        return [self.get_user(i) for i in self.owner_ids]
 
     def run(self):
         super().run(config.token, reconnect=True)
