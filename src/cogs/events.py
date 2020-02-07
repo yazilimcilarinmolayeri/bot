@@ -1,19 +1,17 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2019-2020, Yazılımcıların Mola Yeri (ymy-discord)
-#
 
 import sys
 import config
 import traceback
 
-from cogs.utils import meta
-from cogs.utils import role
-from cogs.utils import emoji as e
+from .utils import meta
+from .utils import role
+from .utils import emoji as e
 
 import discord
-from discord.ext import commands
 from discord.utils import get
+from discord.ext import commands
 from discord.ext.commands import errors
 
 
@@ -47,7 +45,7 @@ class Events(commands.Cog):
 
         elif isinstance(err, errors.CommandOnCooldown):
             await ctx.send(
-                f"Bu komut bekleme modunda... {err.retry_after:.2f}sn. sonra tekrar dene!"
+                f"Bu komut bekleme modunda... {err.retry_after:.1f}s sonra tekrar dene!"
             )
         elif isinstance(err, commands.CommandInvokeError):
             original = err.original
@@ -86,7 +84,7 @@ class Events(commands.Cog):
                 try:
                     role = self.get_role(guild, self.get_emoji(emoji))
                     await user.add_roles(role)
-                    await user.send(f"`{role}` adlı rol alındı!")
+                    await user.send(f"`{role}` rolü alındı.")
 
                 except KeyError:
                     channel = self.bot.get_channel(channel_id)
@@ -112,7 +110,7 @@ class Events(commands.Cog):
                 try:
                     role = self.get_role(guild, self.get_emoji(emoji))
                     await user.remove_roles(role)
-                    await user.send(f"`{role}` adlı rol bırakıldı!")
+                    await user.send(f"`{role}` rölü bırakıldı.")
 
                 except KeyError:
                     pass
