@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2019-2020, Yazılımcıların Mola Yeri (ymy-discord)
-#
 
 import emoji
 
 from discord.utils import get
-
-
-pong = "\U0001f3d3"
 
 
 def unicode_to_name(e):

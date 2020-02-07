@@ -4,7 +4,7 @@
 #
 
 roles = {
-    # Emoji id/ad: Rol adı
+    # "emoji id/ad": "rol adı"
     "626684322409218049": "Python",
     "626684330332258305": "Java",
     "626684329950445588": "JavaScript",

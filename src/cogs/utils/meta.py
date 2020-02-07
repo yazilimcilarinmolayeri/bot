@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2019-2020, Yazılımcıların Mola Yeri (ymy-discord)
-#
 
 import config
 
