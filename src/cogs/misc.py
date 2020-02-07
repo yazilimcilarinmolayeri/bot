@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2019-2020, Yazılımcıların Mola Yeri (ymy-discord)
-#
 
 import time
-
-from cogs.utils import emoji
 
 import discord
 from discord.ext import commands
@@ -19,12 +15,13 @@ class Misc(commands.Cog):
 
     @commands.command(aliases=["gecikme"])
     async def ping(self, ctx):
-        """ Gecikme süresini hesaplar """
+        """Botun gecikme süresini hesaplar."""
+
         before = time.monotonic()
         message = await ctx.send("Pinging...")
-
+        # Ms cinsinden hesaplamak için 1000 ile çarpıyoruz.
         ping = (time.monotonic() - before) * 1000
-        await message.edit(content=f"{emoji.pong} Pong! `{int(ping)}`ms")
+        await message.edit(content=f"Pong! `{ping:.2f}`ms")
 
 
 def setup(bot):

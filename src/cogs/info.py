@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2019-2020, Yazılımcıların Mola Yeri (ymydepo)
+# source/kaynak komutu kaynağı:
+# - https://github.com/Rapptz/RoboDanny/blob/rewrite/cogs/meta.py#L328-L366
 #
 
 import os
@@ -18,13 +19,12 @@ class Info(commands.Cog):
 
     @commands.command(aliases=["kaynak"])
     async def source(self, ctx, *, command: str = None):
-        """ Tam kaynak kodunu veya komut kodlarını görüntüler. """
+        """Botun GitHub'da bulunan kaynak kodlarını görüntüler."""
 
         source_url = "https://github.com/ymy-discord/ymybot"
         branch = "master"
         if command is None:
             return await ctx.send(source_url)
-
         if command == "help":
             src = type(self.bot.help_command)
             module = src.__module__
