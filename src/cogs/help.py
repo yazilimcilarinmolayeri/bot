@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2019-2020, Yazılımcıların Mola Yeri (ymy-discord)
+# help/yardım komutu yazılırken yararlanılan kaynaklar:
+# - https://github.com/Rapptz/RoboDanny/blob/rewrite/cogs/meta.py#L114-L200
+# - https://github.com/AlexFlipnote/discord_bot.py/blob/master/utils/data.py
+# - https://github.com/iDutchy/Charles/blob/master/cogs/Help.py
 #
 
 import itertools
@@ -14,8 +17,8 @@ class HelpCommand(commands.HelpCommand):
         super().__init__(
             command_attrs={
                 "aliases": ["yardım"],
-                "help": "Shows help about the bot, a command, or a category",
-                "cooldown": commands.Cooldown(1, 3.0, commands.BucketType.member),
+                "help": "Katagori ve komutların yardım mesajını gösterir.",
+                "cooldown": commands.Cooldown(1, 5.0, commands.BucketType.member),
             }
         )
 
@@ -49,30 +52,29 @@ class HelpCommand(commands.HelpCommand):
 
     async def send_bot_help(self, mapping):
         ctx = self.context
-        owner = self.context.bot.owner
+        owners = ctx.bot.owners
 
         embed = discord.Embed(color=ctx.bot.embed_color)
-        
-        embed.description = (
-            f"Komutlar hakkında detaylı bilgi için: `[help|yardım] [command]`"
-        )
+        embed.description = "Yardım mesajı için: `[help|yardım] [command]`\nKaynak kodlar için: `[source|kaynak] [command]`"
         embed.set_author(name=ctx.bot.user.name)
-        
+
         for extension in self.context.bot.cogs.values():
-            if ctx.author == owner and extension.qualified_name in self.owner_cogs:
+            commands = [f"**`{c.qualified_name}`**" for c in mapping[extension]]
+
+            if len(commands) == 0:
                 continue
             if extension.qualified_name in self.ignore_cogs:
                 continue
+            if (
+                not (ctx.author in owners)
+                and extension.qualified_name in self.owner_cogs
+            ):
+                continue
 
-            commands = [f"**`{c.qualified_name}`**" for c in mapping[extension]]
-            
-            if len(commands) != 0:
-                embed.add_field(
-                    name=extension.qualified_name, value=", ".join(commands), inline=False)
-            else:
-                embed.add_field(
-                    name=extension.qualified_name, value="\u200b", inline=False)
-        
+            embed.add_field(
+                name=extension.qualified_name, value=", ".join(commands), inline=False
+            )
+
         await ctx.send(embed=embed)
 
     async def send_command_help(self, command):
@@ -82,7 +84,7 @@ class HelpCommand(commands.HelpCommand):
 
     async def command_not_found(self, string):
         destination = self.get_destination(no_pm=True)
-        await destination.send(f'"{string}" adlı bir komut bulunamadı.')
+        await destination.send(f'"{string}" komutu bulunamadı.')
 
 
 class Help(commands.Cog):
