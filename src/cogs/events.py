@@ -110,7 +110,7 @@ class Events(commands.Cog):
                 try:
                     role = self.get_role(guild, self.get_emoji(emoji))
                     await user.remove_roles(role)
-                    await user.send(f"`{role}` rölü bırakıldı.")
+                    await user.send(f"`{role}` rolü bırakıldı.")
 
                 except KeyError:
                     pass
