@@ -50,7 +50,14 @@ class YMYBot(commands.Bot):
             try:
                 self.load_extension(cog)
             except Exception as exc:
-                print(f"{cog} {exc.__class__.__name__}: {exc}")
+                print(f'{cog} {exc.__class__.__name__}: {exc}')
+        
+        #
+        # jishaku: A debugging and testing cog for discord.py rewrite bots.
+        # Source code: https://github.com/Gorialis/jishaku
+        #
+
+        self.load_extension('jishaku')
 
         if not hasattr(self, "uptime"):
             self.uptime = datetime.datetime.utcnow()
