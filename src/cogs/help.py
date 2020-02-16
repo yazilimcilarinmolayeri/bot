@@ -7,6 +7,7 @@
 #
 
 import itertools
+from datetime import datetime
 
 import discord
 from discord.ext import commands
@@ -17,13 +18,13 @@ class HelpCommand(commands.HelpCommand):
         super().__init__(
             command_attrs={
                 "aliases": ["yardım"],
-                "help": "Katagori ve komutların yardım mesajını gösterir.",
-                "cooldown": commands.Cooldown(1, 5.0, commands.BucketType.member),
+                "help": "Katagori ve komutların yardım mesajını görüntüler.",
+                "cooldown": commands.Cooldown(1, 3.0, commands.BucketType.member),
             }
         )
 
         self.owner_cogs = ["Admin"]
-        self.ignore_cogs = ["Events", "Help"]
+        self.ignore_cogs = ["Events", "Help", "Jishaku"]
 
     def get_destination(self, no_pm: bool = False):
         if no_pm:
@@ -44,22 +45,28 @@ class HelpCommand(commands.HelpCommand):
         return f"{alias} {command.signature}"
 
     def common_command_formatting(self, embed, command):
-        embed.title = self.get_command_signature(command)
+        embed.description = f"Kullanım: `{self.get_command_signature(command).strip()}`"
+
         if command.description:
-            embed.description = f"{command.description}\n\n{command.help}"
+            description = f"{command.description}\n\n{command.help}"
         else:
-            embed.description = command.help or "Yardım bulunamadı..."
+            description = command.help or "Yardım bulunamadı."
+
+        embed.add_field(name="Açıklama", value=description)
 
     async def send_bot_help(self, mapping):
         ctx = self.context
         owners = ctx.bot.owners
 
-        embed = discord.Embed(color=ctx.bot.embed_color)
-        embed.description = "Yardım mesajı için: `[help|yardım] [command]`\nKaynak kodlar için: `[source|kaynak] [command]`"
-        embed.set_author(name=ctx.bot.user.name)
+        embed = discord.Embed(color=ctx.bot.embed_color, timestamp=datetime.utcnow())
+        embed.set_author(name=f"{ctx.bot.user.name} Komutları")
+        embed.description = """
+        Bir komut hakkında yardım için `help [command]`
+        **Not:** Zorunlu argüman `<>`, isteğe bağlı argüman `[]`
+        """
 
         for extension in self.context.bot.cogs.values():
-            commands = [f"**`{c.qualified_name}`**" for c in mapping[extension]]
+            commands = [f"`{c.qualified_name}`" for c in mapping[extension]]
 
             if len(commands) == 0:
                 continue
@@ -72,9 +79,10 @@ class HelpCommand(commands.HelpCommand):
                 continue
 
             embed.add_field(
-                name=extension.qualified_name, value=", ".join(commands), inline=False
+                name=extension.qualified_name, value=" ".join(commands), inline=False
             )
 
+        embed.set_footer(text=ctx.message.author)
         await ctx.send(embed=embed)
 
     async def send_command_help(self, command):
