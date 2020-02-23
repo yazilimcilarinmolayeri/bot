@@ -52,6 +52,19 @@ class Info(commands.Cog):
         final_url = f"<{source_url}/blob/{branch}/{location}#L{firstlineno}-L{firstlineno + len(lines) - 1}>"
         await ctx.send(final_url)
 
+    @commands.command()
+    async def avatar(self, ctx, *, user: discord.Member = None):
+        """Kullanıcının büyük boyutda avatarını gösterir."""
+        
+        user = user or ctx.author
+        
+        embed = discord.Embed(color=self.bot.embed_color)
+        avatar = user.avatar_url_as(static_format="png")
+        embed.set_author(name=user)
+        embed.set_image(url=avatar)
+        
+        await ctx.send(embed=embed)
+
 
 def setup(bot):
     bot.add_cog(Info(bot))
