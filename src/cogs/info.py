@@ -21,7 +21,7 @@ class Info(commands.Cog):
     async def source(self, ctx, *, command: str = None):
         """Botun GitHub'da bulunan kaynak kodlarını görüntüler."""
 
-        source_url = "https://github.com/ymy-discord/ymybot"
+        source_url = "https://github.com/ymyoh/ymybot"
         branch = "master"
         if command is None:
             return await ctx.send(source_url)
