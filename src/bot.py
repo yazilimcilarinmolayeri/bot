@@ -20,12 +20,12 @@ YMY (Yazılımcıların Mola Yeri) geliştiricileri tarafından sunucu ihtiyaçl
 
 extensions = [
     "cogs.events",
-    "cogs.help",
     "cogs.admin",
     "cogs.mod",
     "cogs.info",
     "cogs.fun",
     "cogs.misc",
+    "cogs.help",
 ]
 
 
@@ -37,7 +37,7 @@ def get_prefix(bot, msg):
 class YMYBot(commands.Bot):
     def __init__(self):
         super().__init__(
-            command_prefix=get_prefix, description=description, case_insensitive=True
+            command_prefix=get_prefix, description=description, case_insensitive=True,
         )
 
         # Bot sahiplerinin ID'sini bu listeye ekle.
@@ -77,7 +77,7 @@ bot = YMYBot()
 async def on_ready():
     print(f"{bot.user} (ID: {bot.user.id})")
     print(f"discord.py version: {discord.__version__}")
-
+    
     await meta.update_activity_name(bot)
 
 
