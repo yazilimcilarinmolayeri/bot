@@ -1,24 +1,24 @@
 # -*- coding: utf-8 -*-
 #
 
-from os import listdir, environ
+from os import environ as env
 
+# 
+# GNU/Linux'da sistem değişkeni oluşturmak için yapmanız gerekenler:
+# 1. Ev dizinize gidin.
+#   $ cd ~
+# 2. Ev dizinindeki .bashrc dosyasını düzenlemek için bir editör ile açın.
+#   $ nano .bashrc
+# 3. Dosyaya şunları ekleyin ve kaydedip çıkın.
+#   TOKEN='TOKEN ANAHTARI'
+#   export TOKEN
+# 4. Daha sonra şu komutu çalıştırın.
+#   $ source .bashrc
+# 
+# İşlem tamamdır, sistem değişkeni kullanılabilir durumda.
+#
 
-"""
-GNU/Linux'da sistem değişkeni oluşturmak için yapmanız gerekenler:
-  Ev dizinize gidin.
-    $ cd ~
-  Ev dizinindeki .bashrc dosyasını düzenlemek için bir editör ile açın.
-    $ nano .bashrc
-  Dosyaya şunları ekleyin ve kaydedip çıkın.
-    TOKEN='TOKEN ANAHTARI'
-    export TOKEN
-  Daha sonra şu komutu çalıştırın.
-    $ source .bashrc
-  İşlem tamamdır, sistem değişkeni kullanılabilir durumda.
-"""
-
-token = environ.get("TOKEN")
+token = env.get("TOKEN")
 
 #
 # Sistem değişkeni oluşturmak istemiyorsanız alttaki token değişkekine
@@ -29,13 +29,22 @@ if token == None:
     token = "TOKEN"
 
 #
+# imgflip.com API değişkenleri
+#
+
+ifa = env.get("imgflip_api").split(",")
+imgflip_api = {"username": ifa[0], "password": ifa[1]}
+
+#
 # Yazılımcıların Mola Yeri için özel değişkenler. Değişkenler dinamik
 # üretilecek şekilde olması için daha sonra bu kodlara el atılacak.
 #
 
 ymy_guild_id = 418887354699350028
 
+#
 # Reaksiyon ile rol almak için kullanılan kanal ve mesaj değişkenleri.
+#
 
 reaction_role_channel_id = 485084529443471390
 reaction_role_message_ids = [
