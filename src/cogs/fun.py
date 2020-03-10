@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 
-# from config import imgflip_api
+from config import imgflip_api
 
 import random
 import aiohttp
