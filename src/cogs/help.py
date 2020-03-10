@@ -6,7 +6,6 @@
 # - https://github.com/iDutchy/Charles/blob/master/cogs/Help.py
 #
 
-import itertools
 from datetime import datetime
 
 import discord
@@ -45,14 +44,11 @@ class HelpCommand(commands.HelpCommand):
         return f"{alias} {command.signature}"
 
     def common_command_formatting(self, embed, command):
-        embed.description = f"Kullanım: `{self.get_command_signature(command).strip()}`"
-
+        embed.title = self.get_command_signature(command)
         if command.description:
-            description = f"{command.description}\n\n{command.help}"
+            embed.description = f"{command.description}\n\n{command.help}"
         else:
-            description = command.help or "Yardım bulunamadı."
-
-        embed.add_field(name="Açıklama", value=description)
+            embed.description = command.help or "Yardım bulunamadı..."
 
     async def send_bot_help(self, mapping):
         ctx = self.context
@@ -60,14 +56,10 @@ class HelpCommand(commands.HelpCommand):
 
         embed = discord.Embed(color=ctx.bot.embed_color, timestamp=datetime.utcnow())
         embed.set_author(name=f"{ctx.bot.user.name} Komutları")
-        embed.description = """
-        Bir komut hakkında yardım için `help [command]`
-        **Not:** Zorunlu argüman `<>`, isteğe bağlı argüman `[]`
-        """
+        embed.description = "Bir komut hakkında yardım için `help [command]`\n**Not:** Zorunlu argüman `<>`, isteğe bağlı argüman `[]`"
 
-        for extension in self.context.bot.cogs.values():
+        for extension in ctx.bot.cogs.values():
             commands = [f"`{c.qualified_name}`" for c in mapping[extension]]
-
             if len(commands) == 0:
                 continue
             if extension.qualified_name in self.ignore_cogs:
@@ -79,10 +71,12 @@ class HelpCommand(commands.HelpCommand):
                 continue
 
             embed.add_field(
-                name=extension.qualified_name, value=" ".join(commands), inline=False
+                name=f"{extension.qualified_name}",
+                value=", ".join(commands),
+                inline=False,
             )
 
-        embed.set_footer(text=ctx.message.author)
+        # embed.set_footer(text=f"Toplam komut sayısı: {len(ctx.bot.commands)}")
         await ctx.send(embed=embed)
 
     async def send_command_help(self, command):
@@ -93,6 +87,25 @@ class HelpCommand(commands.HelpCommand):
     async def command_not_found(self, string):
         destination = self.get_destination(no_pm=True)
         await destination.send(f'"{string}" komutu bulunamadı.')
+
+    async def send_group_help(self, group):
+        ctx = self.context
+        subcommands = group.commands
+
+        if len(subcommands) == 0:
+            return await self.send_command_help(group)
+
+        embed = discord.Embed(color=self.context.bot.embed_color)
+        self.common_command_formatting(embed, group)
+
+        for sub in subcommands:
+            embed.add_field(
+                name=self.get_command_signature(sub),
+                value=sub.description or sub.help,
+                inline=False,
+            )
+
+        await ctx.send(embed=embed)
 
 
 class Help(commands.Cog):
