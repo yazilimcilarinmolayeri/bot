@@ -63,6 +63,47 @@ class Events(commands.Cog):
     async def on_member_remove(self, member):
         await meta.update_activity_name(self.bot)
 
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        author = message.author
+
+        if message.author is self.bot.user:
+            return
+
+        if message.guild is None:
+            dmlog = self.bot.get_channel(687804890860486762)
+            embed = discord.Embed(color=self.bot.embed_color)
+            embed.description = message.content
+            embed.set_author(name=author, icon_url=author.avatar_url)
+            embed.set_footer(text=f"ID: {message.author.id}")
+
+            if message.attachments:
+                attachment_url = message.attachments[0].url
+                embed.set_image(url=attachment_url)
+
+            await dmlog.send(embed=embed)
+
+        if self.bot.user.mentioned_in(message) and message.mention_everyone is False:
+            mentionlog = self.bot.get_channel(687805076857028671)
+            embed = discord.Embed(color=self.bot.embed_color)
+            embed.description = message.content
+            embed.set_author(name=author, icon_url=author.avatar_url)
+            embed.set_footer(text=f"ID: {message.author.id}")
+
+            embed.add_field(
+                name="Bahsetme Bilgisi",
+                value=f"Sunucu: {author.guild}\n"
+                f"ID: `{author.guild.id}`\n"
+                f"Kanal: #{message.channel.name}\n"
+                f"ID: `{message.channel.id}`",
+            )
+
+            if message.attachments:
+                attachment_url = message.attachments[0].url
+                embed.set_image(url=attachment_url)
+
+            return await mentionlog.send(embed=embed)
+
     # Bu kodlara el atılacak. Asıl fonksiyonlar utils altına alınacak.
 
     @commands.Cog.listener()
