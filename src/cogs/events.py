@@ -98,9 +98,9 @@ class Events(commands.Cog):
     async def on_raw_reaction_add(self, payload):
         guild_id = payload.guild_id
         channel_id = payload.channel_id
-        
+
         reaction_role = ReactionRole(self.bot, payload)
-        
+
         if guild_id == config.ymy_guild_id:
             if channel_id == config.reaction_role_channel_id:
                 await reaction_role.add_or_remove()

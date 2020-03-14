@@ -1,13 +1,13 @@
 #!/usr/bin/python3.7
 # -*- coding: utf-8 -*-
 #
-# 2019-2020, YMYBot - Yazılımcıların Mola Yeri (ymy-discord)
+# YMYBot Copyright (C) 2019-2020 Yazılımcıların Mola Yeri (ymyoh)
 # Davet bağlantısı: https://discord.gg/KazHgb2
 #
 
-import config
 import datetime
 
+import config
 from cogs.utils import meta
 
 import discord
@@ -50,14 +50,14 @@ class YMYBot(commands.Bot):
             try:
                 self.load_extension(cog)
             except Exception as exc:
-                print(f'{cog} {exc.__class__.__name__}: {exc}')
-        
+                print(f"{cog} {exc.__class__.__name__}: {exc}")
+
         #
         # jishaku: A debugging and testing cog for discord.py rewrite bots.
         # Source code: https://github.com/Gorialis/jishaku
         #
 
-        self.load_extension('jishaku')
+        self.load_extension("jishaku")
 
         if not hasattr(self, "uptime"):
             self.uptime = datetime.datetime.utcnow()
@@ -77,7 +77,7 @@ bot = YMYBot()
 async def on_ready():
     print(f"{bot.user} (ID: {bot.user.id})")
     print(f"discord.py version: {discord.__version__}")
-    
+
     await meta.update_activity_name(bot)
 
 
