@@ -9,7 +9,7 @@
 
 YMY (Yazılımcıların Mola Yeri) geliştiricileri tarafından sunucu ihtiyaçları için yazılmış bot.
 
-### Önkoşullar
+### Ön koşullar
 * Python versiyonu 3.7 veya daha yüksek olmalı
 
 ## Yükleme
@@ -18,7 +18,7 @@ git clone https://github.com/ymy-discord/ymybot
 ```
 
 ## Kurulum
-Sanal geliştirme ortamının kurulma amacı, pip ile kurduğunuz paketlerin bilgisayarınıza değil sadece bu proje dosyaları içersinedeki sanal ortama yükleniyor olmasıdır. Projenizi sildiğinizde de paketler silinmiş olur. Sanal geliştirme ortamı kurmak istemeyenler sadece 3. adımı uygulasınlar.
+Sanal geliştirme ortamının kurulma amacı, pip ile kurduğunuz paketlerin bilgisayarınıza değil sadece bu proje dosyaları içersinedeki sanal ortama yükleniyor olmasıdır. Projenizi sildiğinizde de paketler silinmiş olur. Sanal geliştirme ortamı kurmak istemeyenler sadece 1,2 ve 4. adımı atlayabilirler.
 
 1. Sanal geliştirme ortamı hazırla
 
@@ -52,8 +52,7 @@ deactivate
 6. Projeyi çalıştır
 
 ```
-cd src
-python3.7 bot.py
+python3.7 src/bot.py
 ```
 
 ## Katkı ve Test
@@ -63,6 +62,9 @@ Düzenleniyor...
 * [emoji](https://github.com/carpedm20/emoji)
 * [jishaku](https://github.com/Gorialis/jishaku)
 * [discord.py](https://github.com/Rapptz/discord.py)
+
+## Bağlantılar
+Proje test etmek, hakkında merak ettiklerin öğrenmek için [destek](https://discord.gg/KazHgb2) sunucusuna katılabilirsin.
 
 ## Lisans
 [GPL 3.0](LICENSE) © **Yazılımcıların Mola Yeri**
