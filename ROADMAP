@@ -1,7 +1,5 @@
-YMYBOT 1.0 Yol Haritası ve Yapılacaklar
+YMYBot 1.0 Yol Haritası ve Yapılacaklar
 =======================================
-
-Aklıma geldikçe ve sizlerin önerileri dahilinde yol haritası güncellenecektir.
 
 - Yapacağım
 ? Nasıl yapılacağını bulamadım
@@ -9,24 +7,10 @@ Aklıma geldikçe ve sizlerin önerileri dahilinde yol haritası güncellenecekt
 + Yaptım
 
 1. Pre-Alpha
-  - Modül, sınıf ve fonksiyonlara açıklama satırları eklemek.
-  - Her alt işlem için düzenli log kaydı tutumak.
-  - Bot logosu olarak bir fok çizmek (: 
-  - Kullanışlı bir help/yardım komutu yazmak.
-  - Veritabanı modülü:
-    - PostgreSQL ile botun modüllerine uygun bir veritabanı modülü yazmak.
-  / Reaksiyon rol modülü:
-    - Modüler bir yapıya sok.
-  / Yasaklı kelime filtre modülü:
-    - Yasaklı kelimleri filtrele.
-    - Kullanıcıyı geçici bir süre sustur.
-  / Reklam filtre modülü:
-    - Reklam içeren adresleri filtrele.
-    - Kullanıcıyı geçici bir süre sustur.  
-  / Giriş modülü:
-    - Sunucuya katılan kullacılara özel giriş mesajı.
-    - Kullanıcılar #beni-oku kanalındaki son mesaja reaksiyon ekleyerek @YMY Üyesi rolü almaları.
-  - Anket modülü:
-    - Kullacıların önerilerde bulunabileceği bir anket komutu yazmak.
-    - Anket oluşturmak için veri girişi JSON formatında olabilir.
-    - Anket üzerinde reaksiyon eklendikçe güncellenen yüzdelik değerler.
+  + Kullanışlı bir help/yardım komutu yazmak.
+  + Reaksiyon rol modülü.
+  / Yasaklı kelime filtre modülü.
+  / Reklam filtre modülü.
+  / Spam/flood filtre modülü.
+  / gettext modülü ile çift dil desteği eklemek.
+  / Ve diğer çeşitli komutlar...
