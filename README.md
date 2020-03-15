@@ -14,11 +14,11 @@ YMY (Yazılımcıların Mola Yeri) geliştiricileri tarafından sunucu ihtiyaçl
 
 ## Yükleme
 ```
-git clone https://github.com/ymy-discord/ymybot
+git clone https://github.com/ymyoh/ymybot
 ```
 
 ## Kurulum
-Sanal geliştirme ortamının kurulma amacı, pip ile kurduğunuz paketlerin bilgisayarınıza değil sadece bu proje dosyaları içersinedeki sanal ortama yükleniyor olmasıdır. Projenizi sildiğinizde de paketler silinmiş olur. Sanal geliştirme ortamı kurmak istemeyenler sadece 1,2 ve 4. adımı atlayabilirler.
+Sanal geliştirme ortamının kurulma amacı, pip ile kurduğunuz paketlerin bilgisayarınıza değil sadece bu proje dosyaları içersinedeki sanal ortama yükleniyor olmasıdır. Projenizi sildiğinizde de paketler silinmiş olur. Sanal geliştirme ortamı kurmak istemeyenler 1,2 ve 4. adımı atlayabilirler.
 
 1. Sanal geliştirme ortamı hazırla
 
@@ -64,7 +64,7 @@ Düzenleniyor...
 * [discord.py](https://github.com/Rapptz/discord.py)
 
 ## Bağlantılar
-Proje test etmek, hakkında merak ettiklerin öğrenmek için [destek](https://discord.gg/KazHgb2) sunucusuna katılabilirsin.
+Projeyi test etmek, hakkında merak ettiklerin öğrenmek için [destek](https://discord.gg/KazHgb2) sunucusuna katılabilirsin.
 
 ## Lisans
 [GPL 3.0](LICENSE) © **Yazılımcıların Mola Yeri**
