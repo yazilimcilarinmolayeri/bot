@@ -126,7 +126,9 @@ class Events(commands.Cog):
             )
         else:
             await member.add_roles(role)
+            await member.send("\N{BUSTS IN SILHOUETTE} YMY Üyesi rolü verildi.")
             await message.remove_reaction(emoji=payload.emoji, member=member)
+            
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
