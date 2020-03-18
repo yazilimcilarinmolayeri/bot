@@ -1,24 +1,22 @@
 # -*- coding: utf-8 -*-
 #
 
-from config import imgflip_api
-
 import random
-import aiohttp
 from datetime import datetime
+
+import config
+from .utils import http
 
 import discord
 from discord.ext import commands
 
 
-class Fun(commands.Cog):
+class Fun(commands.Cog, name="Funny"):
     """The description for Fun goes here."""
 
     def __init__(self, bot):
         self.bot = bot
         self.loads_meme_commands()
-        self.imgflip_api_url = "https://api.imgflip.com/caption_image"
-        self.session = aiohttp.ClientSession(loop=bot.loop)
 
     def loads_meme_commands(self):
         # teamplate: {"name": "", "lname": "", "id": }
@@ -32,7 +30,11 @@ class Fun(commands.Cog):
             {"name": "winniepooh", "lname": "Tuxedo Winnie The Pooh", "id": 178591752},
             {"name": "womenyelling", "lname": "	Woman Yelling At Cat", "id": 188390779},
             {"name": "disappointed", "lname": "Disappointed Black Guy", "id": 50421420},
-            {"name": "thinkingguy", "lname": "Roll Safe Think About It", "id": 89370399},
+            {
+                "name": "thinkingguy",
+                "lname": "Roll Safe Think About It",
+                "id": 89370399,
+            },
         ]
 
         # {"name": "spiderman", "lname": "Spiderman Presentation", "id": 176754986}
@@ -106,17 +108,13 @@ class Fun(commands.Cog):
         """Ratgele bir kedi resmi gönderir."""
 
         async with ctx.typing():
-            async with aiohttp.ClientSession() as cs:
-                async with cs.get("https://nekos.life/api/v2/img/meow") as r:
-                    if r.status != 200:
-                        return await ctx.send("Kedi bulunamadı :(")
-                    r = await r.json()
+            r = await http.get(
+                url="https://nekos.life/api/v2/img/meow", res_method="json"
+            )
 
-                await ctx.send(
-                    embed=discord.Embed(color=self.bot.embed_color).set_image(
-                        url=r["url"]
-                    )
-                )
+        await ctx.send(
+            embed=discord.Embed(color=self.bot.embed_color).set_image(url=r["url"])
+        )
 
     @commands.group(invoke_without_command=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
@@ -145,26 +143,81 @@ class Fun(commands.Cog):
 
         params = {
             "template_id": meme_id,
-            "username": imgflip_api["username"],
-            "password": imgflip_api["password"],
+            "username": config.imgflip_api["username"],
+            "password": config.imgflip_api["password"],
             "text0": text0,
             "text1": text1,
         }
 
-        embed = discord.Embed(color=self.bot.embed_color, timestamp=datetime.utcnow())
-        embed.set_footer(text=ctx.author, icon_url=ctx.author.avatar_url)
-
         async with ctx.typing():
-            async with aiohttp.ClientSession() as cs:
-                async with cs.post(self.imgflip_api_url, data=params) as r:
-                    if r.status != 200:
-                        return await ctx.send("API bağlantısı başarısız.")
-                    r = await r.json()
-                embed.set_image(url=r["data"]["url"])
-                await ctx.send(embed=embed)
+            r = await http.post(
+                "https://api.imgflip.com/caption_image", data=params, res_method="json"
+            )
+
+        return r["data"]["url"]
 
     async def meme_command(self, ctx, text0, text1=""):
-        await self.meme_generator(ctx, ctx.command.meme_id, text0, text1)
+        embed = discord.Embed(color=self.bot.embed_color)
+        embed.timestamp = datetime.utcnow()
+
+        img_url = await self.meme_generator(ctx, ctx.command.meme_id, text0, text1)
+
+        embed.set_image(url=img_url)
+        embed.set_footer(text=ctx.author, icon_url=ctx.author.avatar_url)
+        await ctx.send(embed=embed)
+
+    @commands.command()
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    async def tweet(self, ctx, *, text: str):
+        """Sahte tweet görseli hazırlar."""
+
+        username = ctx.author.name
+
+        # params = {
+        #     "type": "tweet",
+        #     "username": username,
+        #     "text": text,
+        # }
+
+        async with ctx.typing():
+            r = await http.get(
+                url="https://nekobot.xyz/api/imagegen?"
+                f"type=tweet&username={username}&text={text}",
+                res_method="json",
+            )
+
+            if r["status"] != 200:
+                return await ctx.send("API bağlantısı başarısız...")
+
+        embed = discord.Embed(color=self.bot.embed_color)
+        embed.set_image(url=r["message"])
+        await ctx.send(embed=embed)
+
+    @commands.command()
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    async def deepfry(self, ctx, user: discord.Member = None):
+        """Kişinin profil görseline kızartma efekti ekler."""
+
+        user = user or ctx.author
+        avatar = user.avatar_url
+
+        # params = {
+        #     "type": "deepfry",
+        #     "image": avatar,
+        # }
+
+        async with ctx.typing():
+            r = await http.get(
+                url="https://nekobot.xyz/api/imagegen?" f"type=deepfry&image={avatar}",
+                res_method="json",
+            )
+
+            if r["status"] != 200:
+                return await ctx.send("API bağlantısı başarısız...")
+
+        embed = discord.Embed(color=self.bot.embed_color)
+        embed.set_image(url=r["message"])
+        await ctx.send(embed=embed)
 
 
 def setup(bot):
