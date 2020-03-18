@@ -8,6 +8,8 @@
 
 from datetime import datetime
 
+from cogs.misc import Misc
+
 import discord
 from discord.ext import commands
 
@@ -23,7 +25,7 @@ class HelpCommand(commands.HelpCommand):
         )
 
         self.owner_cogs = ["Admin"]
-        self.ignore_cogs = ["Events", "Help", "Jishaku"]
+        self.ignore_cogs = ["Events", "Jishaku"]
 
     def get_destination(self, no_pm: bool = False):
         if no_pm:
@@ -55,8 +57,11 @@ class HelpCommand(commands.HelpCommand):
         owners = ctx.bot.owners
 
         embed = discord.Embed(color=ctx.bot.embed_color, timestamp=datetime.utcnow())
-        embed.set_author(name=f"{ctx.bot.user.name} Komutları")
-        embed.description = "Bir komut hakkında yardım için `help [command]`\n**Not:** Zorunlu argüman `<>`, isteğe bağlı argüman `[]`"
+        embed.set_author(name=f"{ctx.bot.user.name} Komut Listesi")
+        embed.description = (
+            "Bir komut hakkında yardım için `help [command]`\n"
+            "**Not:** Zorunlu argüman `<>`, isteğe bağlı argüman `[]`"
+        )
 
         for extension in ctx.bot.cogs.values():
             commands = [f"`{c.qualified_name}`" for c in mapping[extension]]
@@ -71,7 +76,7 @@ class HelpCommand(commands.HelpCommand):
                 continue
 
             embed.add_field(
-                name=f"{extension.qualified_name}",
+                name=f"{extension.qualified_name} ({len(commands)})",
                 value=", ".join(commands),
                 inline=False,
             )
@@ -114,7 +119,7 @@ class Help(commands.Cog):
     def __init__(self, bot):
         self._original_help_command = bot.help_command
         bot.help_command = HelpCommand()
-        bot.help_command.cog = self
+        bot.help_command.cog = Misc(bot)
         self.bot = bot
 
     def cog_unload(self):
