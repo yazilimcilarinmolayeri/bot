@@ -59,7 +59,7 @@ class Admin(commands.Cog):
         except commands.ExtensionError as e:
             await ctx.send(f"{e.__class__.__name__}: {e}")
         else:
-            await ctx.send("\N{WHITE HEAVY CHECK MARK}")
+            await ctx.message.add_reaction("\u2705")
 
     @commands.command(aliases=["kaldır"], hidden=True)
     async def unload(self, ctx, *, module: str):
@@ -70,7 +70,7 @@ class Admin(commands.Cog):
         except commands.ExtensionError as e:
             await ctx.send(f"{e.__class__.__name__}: {e}")
         else:
-            await ctx.send("\N{WHITE HEAVY CHECK MARK}")
+            await ctx.message.add_reaction("\u2705")
 
     @commands.command(aliases=["yenile"], hidden=True)
     async def reload(self, ctx, *, module: str):
@@ -80,13 +80,13 @@ class Admin(commands.Cog):
         except commands.ExtensionError as e:
             await ctx.send(f"{e.__class__.__name__}: {e}")
         else:
-            await ctx.send("\N{WHITE HEAVY CHECK MARK}")
+            await ctx.message.add_reaction("\u2705")
 
     @commands.command(aliases=["kapat"], hidden=True)
     async def off(self, ctx):
         """Botu devre dışı bırakır."""
 
-        await ctx.send("\N{WHITE HEAVY CHECK MARK}")
+        await ctx.message.add_reaction("\u2705")
         await self.bot.logout()
 
     @commands.command(aliases=["yap"], hidden=True)
@@ -112,7 +112,7 @@ class Admin(commands.Cog):
         else:
             output = stdout
 
-        await ctx.send(f"```{output}```")
+        await ctx.send(f"```sh\n{output}```")
 
     @commands.command(name="eval", hidden=True)
     async def _eval(self, ctx, *, body: str):
