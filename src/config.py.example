@@ -1,0 +1,28 @@
+# -*- coding: utf-8 -*-
+#
+
+token = ""
+
+prefix = [
+    "+", "ymy+",
+]
+
+owner_ids = [
+]
+
+#
+# imgflip.com
+#
+
+imgflip_api = {
+    "username": "",
+    "password": "",
+}
+
+#
+# screenshotapi.net
+#
+
+screenshot_api = {
+    "token": "",
+}
