@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 #
 
-import time
+import json
 from datetime import datetime
+
+from .utils import http
 
 import discord
 from discord.ext import commands
@@ -13,16 +15,6 @@ class Misc(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-
-    @commands.command(aliases=["gecikme"])
-    async def ping(self, ctx):
-        """Botun gecikme süresini hesaplar."""
-
-        before = time.monotonic()
-        message = await ctx.send("Pinging...")
-        # Ms cinsinden hesaplamak için 1000 ile çarpıyoruz.
-        ping = (time.monotonic() - before) * 1000
-        await message.edit(content=f"Pong! `{ping:.2f}`ms")
 
     @commands.guild_only()
     @commands.command(aliases=["anket"])
@@ -57,6 +49,50 @@ class Misc(commands.Cog):
 
         else:
             await ctx.send_help(ctx.command)
+
+    @commands.command(aliases=["urlkısalt"])
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    async def tinyurl(self, ctx, url: str):
+        """Verilen URL adresini TinyUrl kullanarak kısaltır."""
+
+        params = {
+            "url": url,
+        }
+
+        async with ctx.typing():
+            r = await http.post(url="http://tinyurl.com/api-create.php", data=params)
+
+        await ctx.send(f"\N{LINK SYMBOL} <{r}>")
+
+    @commands.command(aliases=["ekrangörüntüsü"])
+    @commands.cooldown(1, 60, commands.BucketType.user)
+    async def ss(self, ctx, url: str, full_page: bool = 0):
+        """Verilen website adresinin ekran görüntüsünü üretir."""
+
+        # Aylık limit, 100 farklı ekran görüntüsü.
+        # https://screenshotapi.net/
+        # fresh: bool = 0
+
+        params = {
+            "url": url,
+            "token": config.screenshot_api["token"],
+            "full_page": full_page,
+            "accept_languages": "tr-TR",
+        }
+
+        info_message = await ctx.send("Bu işlem birazcık uzun sürebilir...")
+
+        async with ctx.typing():
+            r = await http.post(
+                url="https://screenshotapi.net/api/v1/screenshot",
+                data=params,
+                res_method="json",
+            )
+
+        embed = discord.Embed(color=self.bot.embed_color)
+        embed.title = r["url"]
+        embed.set_image(url=r["screenshot"])
+        await info_message.edit(content="", embed=embed)
 
 
 def setup(bot):
