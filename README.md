@@ -60,11 +60,13 @@ Düzenleniyor...
 
 ## Kütüphaneler
 * [emoji](https://github.com/carpedm20/emoji)
+* [arrow](https://github.com/crsmithdev/arrow)
+* [psutil](https://github.com/giampaolo/psutil)
 * [jishaku](https://github.com/Gorialis/jishaku)
 * [discord.py](https://github.com/Rapptz/discord.py)
 
 ## Bağlantılar
-Projeyi test etmek, hakkında merak ettiklerin öğrenmek için [destek](https://discord.gg/KazHgb2) sunucusuna katılabilirsin.
+Projeyi test etmek, hakkında merak ettiklerini öğrenmek için [destek](https://discord.gg/KazHgb2) sunucusuna katıl.
 
 ## Lisans
 [GPL 3.0](LICENSE) © **Yazılımcıların Mola Yeri**
