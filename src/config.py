@@ -2,41 +2,53 @@
 #
 
 from os import environ as env
+from ast import literal_eval as le
 
-# 
+#
 # GNU/Linux'da sistem değişkeni oluşturmak için yapmanız gerekenler:
 # 1. Ev dizinize gidin.
 #   $ cd ~
 # 2. Ev dizinindeki .bashrc dosyasını düzenlemek için bir editör ile açın.
 #   $ nano .bashrc
 # 3. Dosyaya şunları ekleyin ve kaydedip çıkın.
-#   TOKEN='TOKEN ANAHTARI'
-#   export TOKEN
+#   token='token'
+#   export token
 # 4. Daha sonra şu komutu çalıştırın.
 #   $ source .bashrc
-# 
-# İşlem tamamdır, sistem değişkeni kullanılabilir durumda.
+#
+# İşlem tamam, sistem değişkeni kullanılabilir durumda. Test etmek için:
+#   $ echo $token
 #
 
-token = env.get("TOKEN")
+token = env.get("token")
+
+prefix = [
+    "+", "ymy+",
+]
+
+owner_ids = [
+    428273380844765185, 
+    335119989893890049, 
+    429276634072350720,
+]
 
 #
-# Sistem değişkeni oluşturmak istemiyorsanız alttaki token değişkekine
-# bot tokenini yazınız...
+# imgflip.com
 #
-
-if token == None:
-    token = "TOKEN"
+# {"username": "", "password": ""}
+imgflip_api = le(env.get("imgflip_api"))
 
 #
-# imgflip.com API değişkenleri
+# screenshotapi.net
 #
+# {"token": ""}
+screenshot_api = le(env.get("screenshot_api"))
 
-ifa = env.get("imgflip_api").split(",")
-imgflip_api = {"username": ifa[0], "password": ifa[1]}
+
+# ============================Yazılımcıların Mola Yeri============================
 
 #
-# Yazılımcıların Mola Yeri için özel değişkenler. Değişkenler dinamik
+# Yazılımcıların Mola Yeri (YMY) için özel değişkenler. Değişkenler dinamik
 # üretilecek şekilde olması için daha sonra bu kodlara el atılacak.
 #
 
@@ -45,6 +57,9 @@ ymy_guild_id = 418887354699350028
 #
 # Reaksiyon ile rol almak için kullanılan kanal ve mesaj değişkenleri.
 #
+
+beni_oku_channel_id = 609350584314626049
+beni_oku_message_id = 641621615238578207
 
 reaction_role_channel_id = 485084529443471390
 reaction_role_message_ids = [
