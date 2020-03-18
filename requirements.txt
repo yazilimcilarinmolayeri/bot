@@ -1,4 +1,5 @@
 pip
 emoji
+arrow
 jishaku
 discord.py
