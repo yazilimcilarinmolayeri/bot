@@ -5,7 +5,9 @@
 # Davet bağlantısı: https://discord.gg/KazHgb2
 #
 
+import aiohttp
 import datetime
+from collections import Counter
 
 import config
 from cogs.utils import meta
@@ -31,7 +33,7 @@ extensions = [
 
 def get_prefix(bot, msg):
     user_id = bot.user.id
-    return [f"<@!{user_id}> ", f"<@{user_id}> ", "ymy+", "+"]
+    return [f"<@!{user_id}> ", f"<@{user_id}> "] + config.prefix
 
 
 class YMYBot(commands.Bot):
@@ -40,11 +42,14 @@ class YMYBot(commands.Bot):
             command_prefix=get_prefix, description=description, case_insensitive=True,
         )
 
-        # Bot sahiplerinin ID'sini bu listeye ekle.
-        self.owner_ids = set(
-            [428273380844765185, 335119989893890049, 429276634072350720,]
-        )
         self.embed_color = 0x36393F
+        self.owner_ids = set(config.owner_ids)
+        self.session = aiohttp.ClientSession(loop=self.loop)
+
+        self._auto_spam_count = Counter()
+        self.spam_control = commands.CooldownMapping.from_cooldown(
+            10, 12.0, commands.BucketType.user
+        )
 
         for cog in extensions:
             try:
@@ -71,6 +76,7 @@ class YMYBot(commands.Bot):
 
 
 bot = YMYBot()
+# __import__("generator").command_guide_builder(bot)
 
 
 @bot.event
