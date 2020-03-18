@@ -122,7 +122,7 @@ class Events(commands.Cog):
             await message.remove_reaction(emoji=payload.emoji, member=member)
             await member.send(
                 "\N{SPEECH BALLOON} "
-                "Hadi ama dostum cidden bu kadar kısa sürede okudun mu?"
+                "Hadi ama dostum cidden bu kadar kısa sürede kuralları okudun mu?"
             )
         else:
             await member.add_roles(role)
