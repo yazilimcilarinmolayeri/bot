@@ -9,7 +9,7 @@ import discord
 from discord.ext import commands
 
 
-class Mod(commands.Cog):
+class Mod(commands.Cog, name="Moderation"):
     """The description for Mod goes here."""
 
     def __init__(self, bot):
