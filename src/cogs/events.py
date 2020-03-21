@@ -64,7 +64,7 @@ class Events(commands.Cog):
 
         if message.guild is None:
             dmlog = self.bot.get_channel(687804890860486762)
-            embed = discord.Embed(color=self.bot.embed_color)
+            embed = discord.Embed(color=discord.Colour.blue())
             embed.description = message.content
             embed.set_author(name=author, icon_url=author.avatar_url)
             embed.set_footer(text=f"ID: {message.author.id}")
@@ -84,10 +84,10 @@ class Events(commands.Cog):
 
             embed.add_field(
                 name="Bahsetme Bilgisi",
-                value=f"Sunucu: {author.guild}\n"
-                f"ID: `{author.guild.id}`\n"
-                f"Kanal: #{message.channel.name}\n"
-                f"ID: `{message.channel.id}`",
+                value=f"**Sunucu:** {author.guild}\n"
+                f"**ID:** `{author.guild.id}`\n"
+                f"**Kanal:** #{message.channel.name}\n"
+                f"**ID:** `{message.channel.id}`",
             )
 
             if message.attachments:
@@ -125,7 +125,6 @@ class Events(commands.Cog):
                 "Hadi ama dostum cidden bu kadar kısa sürede kuralları okudun mu?"
             )
         else:
-            await member.add_roles(role)
             await member.send("\N{BUSTS IN SILHOUETTE} YMY Üyesi rolü verildi.")
             await message.remove_reaction(emoji=payload.emoji, member=member)
             
@@ -138,7 +137,7 @@ class Events(commands.Cog):
         reaction_role = ReactionRole(self.bot, payload)
 
         if guild_id == config.ymy_guild_id:
-            if channel_id == config.reaction_role_channel_id:
+            if channel_id == config.rr_channel_id:
                 await reaction_role.add_or_remove()
 
             if channel_id == config.beni_oku_channel_id:
