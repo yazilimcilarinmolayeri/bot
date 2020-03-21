@@ -125,8 +125,9 @@ class Events(commands.Cog):
                 "Hadi ama dostum cidden bu kadar kısa sürede kuralları okudun mu?"
             )
         else:
+            await member.add_roles(role)
             await member.send("\N{BUSTS IN SILHOUETTE} YMY Üyesi rolü verildi.")
-            await message.remove_reaction(emoji=payload.emoji, member=member)
+            # await message.remove_reaction(emoji=payload.emoji, member=member)
             
 
     @commands.Cog.listener()
