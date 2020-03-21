@@ -1,0 +1,108 @@
+{
+  "690869405676077057": {
+    "title": "Popüler Diller",
+    "rr": {
+      "snake": "Python",
+      "hot_beverage": "Java",
+      "dim_button": "JavaScript",
+      "keycap_#": "C#",
+      "elephant": "PHP",
+      "books": "C",
+      "hammer_and_wrench": "C++",
+      "linked_paperclips": "R",
+      "optical_disk": "Objective-C",
+      "bird": "Swift"
+    }
+  },
+  "690869406623989790": {
+    "title": "Diğer Diller",
+    "rr": {
+      "compass": "Type Script",
+      "soap": "Kotlin",
+      "goat": "Go",
+      "gem_stone": "Ruby",
+      "direct_hit": "Visual Basic",
+      "gear": "Rust",
+      "camel": "Perl",
+      "last_quarter_moon": "Lua",
+      "mushroom": "Delphi",
+      "white_flower": "Scala",
+      "battery": "Bash Script",
+      "jigsaw": "Assembly"
+    }
+  },
+  "690869407253266454": {
+    "title": "Web Geliştirme",
+    "rr": {
+      "Aquarius": "HTML",
+      "nazar_amulet": "CSS",
+      "Aries": "VueJS",
+      "microbe": "NodeJS",
+      "wheel_of_dharma": "ReactJS",
+      "shield": "AngularJS",
+      "triangular_ruler": "Laravel",
+      "horse_face": "Django",
+      "cactus": "ASP.NET",
+      "framed_picture": "Bootstrap"
+    }
+  },
+  "690869408108773427": {
+    "title": "Mobil Geliştirme",
+    "rr": {
+      "green_apple": "iOS",
+      "front-facing_baby_chick": "Android",
+      "chart_increasing": "Flutter",
+      "telephone": "Xamarin",
+      "atom_symbol": "React Native"
+    }
+  },
+  "690869408884719617": {
+    "title": "Oyun Geliştirme",
+    "rr": {
+      "crystal_ball": "Unity",
+      "game_die": "Game Maker",
+      "nut_and_bolt": "Unreal Engine"
+    }
+  },
+  "690869427624738826": {
+    "title": "Veritabanları",
+    "rr": {
+      "package": "SQL",
+      "abacus": "Oracle",
+      "bar_chart": "MySQL"
+    }
+  },
+  "690869428308672572": {
+    "title": "İşletim Sistemleri",
+    "rr": {
+      "penguin": "GNU/Linux",
+      "red_apple": "MacOS",
+      "radioactive": "Windows"
+    }
+  },
+  "690869429042675732": {
+    "title": "Bot Geliştirme",
+    "rr": {
+      "notebook": "Discord.py",
+      "bookmark": "Discord.js"
+    }
+  },
+  "690869429747318814": {
+    "title": "Gömülü Sistemler",
+    "rr": {
+      "infinity": "Arduino",
+      "strawberry": "Raspberry Pi"
+    }
+  },
+  "690869430334259241": {
+    "title": "Diğer Alan Rolleri",
+    "rr": {
+      "clamp": "Algoritma",
+      "floppy_disk": "Donanım",
+      "globe_with_meridians": "WordPress",
+      "robot_face": "Yapay Zeka",
+      "scroll": "Kriptoloji",
+      "artist_palette": "Grafik Tasarım"
+    }
+  }
+}
