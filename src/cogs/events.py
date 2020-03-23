@@ -108,7 +108,7 @@ class Events(commands.Cog):
         message = await channel.fetch_message(payload.message_id)
         member = guild.get_member(payload.user_id)
 
-        role = get(guild.roles, name="YMY Üyesi")
+        ymy_role = get(guild.roles, name="YMY Üyesi")
 
         ist_now = arrow.now("Europe/Istanbul").datetime
         # datetime.timedelta(hours=3)
@@ -125,9 +125,10 @@ class Events(commands.Cog):
                 "Hadi ama dostum cidden bu kadar kısa sürede kuralları okudun mu?"
             )
         else:
-            await member.add_roles(role)
-            await member.send("\N{BUSTS IN SILHOUETTE} YMY Üyesi rolü verildi.")
-            # await message.remove_reaction(emoji=payload.emoji, member=member)
+            if not ymy_role.id in [r.id for r in member.roles]:
+                await member.add_roles(ymy_role)
+                await member.send("\N{BUSTS IN SILHOUETTE} YMY Üyesi rolü verildi.")
+                # await message.remove_reaction(emoji=payload.emoji, member=member)
             
 
     @commands.Cog.listener()

@@ -54,16 +54,7 @@ class ReactionRole:
         """Reaksiyona karşılık gelen rolün kullanıcıda olup olmadığına bakar."""
 
         self.role = self.get_role(self.guild, self.get_emoji(self.emoji))
-
-        status = False
-        for mr in self.member.roles:
-            if mr.id == self.role.id:
-                status = True
-                break
-            else:
-                status = False
-
-        return status
+        return self.role.id in [r.id for r in self.member.roles]
 
     async def remove_reaction(self):
         """Kullanıcının eklediği tepkiyi siler."""
