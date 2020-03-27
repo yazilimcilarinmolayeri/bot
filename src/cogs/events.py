@@ -23,11 +23,32 @@ class Events(commands.Cog):
         self.bot = bot
 
     @commands.Cog.listener()
+    async def on_ready(self):
+        if not hasattr(self, "uptime"):
+            self.bot.uptime = datetime.datetime.now()
+        
+        print(f"{self.bot.user} (ID: {self.bot.user.id})")
+        print(f"discord.py version: {discord.__version__}")
+        
+        await meta.update_activity_name(self.bot)
+
+    @commands.Cog.listener()
     async def on_command_error(self, ctx, err):
-        # Çağrılan komutda eksik yada hatalı argüman var ise yardım mesajı gönderilir.
-        if isinstance(err, errors.MissingRequiredArgument) or isinstance(
-            err, errors.BadArgument
-        ):
+        msa = errors.MissingRequiredArgument
+        
+        if isinstance(err, commands.CommandInvokeError):
+            original = err.original
+
+            if not isinstance(original, discord.HTTPException):
+                print(f"In {ctx.command.qualified_name}:", file=sys.stderr)
+                traceback.print_tb(original.__traceback__)
+                print(f"{original.__class__.__name__}: {original}", file=sys.stderr)
+
+        if isinstance(err, commands.CheckFailure):
+            await ctx.send("Bu komutu kullanabilmek için yeterli izne sahip değilsin!")
+        
+        if isinstance(err, msa) or isinstance(err, errors.BadArgument):
+            # Çağrılan komutda eksik yada hatalı argüman var ise yardım mesajı gönderilir.
             helper = (
                 str(ctx.invoked_subcommand)
                 if ctx.invoked_subcommand
@@ -35,17 +56,8 @@ class Events(commands.Cog):
             )
             await ctx.send_help(helper)
 
-        elif isinstance(err, errors.CommandOnCooldown):
-            await ctx.send(
-                f"Bu komut bekleme modunda... {err.retry_after:.1f}s sonra tekrar dene!"
-            )
-        elif isinstance(err, commands.CommandInvokeError):
-            original = err.original
-
-            if not isinstance(original, discord.HTTPException):
-                print(f"In {ctx.command.qualified_name}:", file=sys.stderr)
-                traceback.print_tb(original.__traceback__)
-                print(f"{original.__class__.__name__}: {original}", file=sys.stderr)
+        if isinstance(err, errors.CommandOnCooldown):
+            await ctx.send(f"Bu komut bekleme modunda! {err.retry_after:.1f}s sonra tekrar dene.")
 
     @commands.Cog.listener()
     async def on_member_join(self, member):

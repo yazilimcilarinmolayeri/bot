@@ -6,11 +6,9 @@
 #
 
 import aiohttp
-import datetime
 from collections import Counter
 
 import config
-from cogs.utils import meta
 
 import discord
 from discord.ext import commands
@@ -41,7 +39,8 @@ class YMYBot(commands.Bot):
         super().__init__(
             command_prefix=get_prefix, description=description, case_insensitive=True,
         )
-
+        
+        self.uptime = ""
         self.embed_color = 0x36393F
         self.owner_ids = set(config.owner_ids)
         self.session = aiohttp.ClientSession(loop=self.loop)
@@ -64,12 +63,20 @@ class YMYBot(commands.Bot):
 
         self.load_extension("jishaku")
 
-        if not hasattr(self, "uptime"):
-            self.uptime = datetime.datetime.utcnow()
-
     @property
     def owners(self):
         return [self.get_user(i) for i in self.owner_ids]
+
+    @property
+    def config(self):
+        return __import__("config")
+
+    async def on_resumed(self):
+        print("Resumed...")
+
+    async def close(self):
+        await super().close()
+        await self.session.close()
 
     def run(self):
         super().run(config.token, reconnect=True)
@@ -77,14 +84,6 @@ class YMYBot(commands.Bot):
 
 bot = YMYBot()
 # __import__("generator").command_guide_builder(bot)
-
-
-@bot.event
-async def on_ready():
-    print(f"{bot.user} (ID: {bot.user.id})")
-    print(f"discord.py version: {discord.__version__}")
-
-    await meta.update_activity_name(bot)
 
 
 if __name__ == "__main__":
