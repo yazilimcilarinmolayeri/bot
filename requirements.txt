@@ -3,4 +3,5 @@ emoji
 arrow
 psutil
 jishaku
+humanize
 discord.py

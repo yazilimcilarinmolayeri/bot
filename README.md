@@ -63,6 +63,7 @@ Düzenleniyor...
 * [arrow](https://github.com/crsmithdev/arrow)
 * [psutil](https://github.com/giampaolo/psutil)
 * [jishaku](https://github.com/Gorialis/jishaku)
+* [humanize](https://github.com/jmoiron/humanize)
 * [discord.py](https://github.com/Rapptz/discord.py)
 
 ## Bağlantılar
