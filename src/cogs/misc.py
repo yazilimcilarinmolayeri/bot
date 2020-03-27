@@ -79,7 +79,6 @@ class Misc(commands.Cog):
             "url": url,
             "token": config.screenshot_api["token"],
             "full_page": full_page,
-            "user_agent": user_agent,
             "accept_languages": "tr-TR",
         }
 
