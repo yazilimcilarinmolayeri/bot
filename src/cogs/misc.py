@@ -66,18 +66,20 @@ class Misc(commands.Cog):
         await ctx.send(f"\N{LINK SYMBOL} <{r}>")
 
     @commands.command(aliases=["ekrangörüntüsü"])
-    @commands.cooldown(1, 60, commands.BucketType.user)
+    @commands.cooldown(1, 30, commands.BucketType.user)
     async def ss(self, ctx, url: str, full_page: bool = 0):
         """Verilen website adresinin ekran görüntüsünü üretir."""
 
         # Aylık limit, 100 farklı ekran görüntüsü.
         # https://screenshotapi.net/
         # fresh: bool = 0
+        # user_agent: str = " "
 
         params = {
             "url": url,
             "token": config.screenshot_api["token"],
             "full_page": full_page,
+            "user_agent": user_agent,
             "accept_languages": "tr-TR",
         }
 
@@ -90,11 +92,16 @@ class Misc(commands.Cog):
                 res_method="json",
             )
 
-        embed = discord.Embed(color=self.bot.embed_color)
-        embed.title = r["url"]
-        embed.set_image(url=r["screenshot"])
+        embed = discord.Embed(color=self.bot.embed_color, timestamp=datetime.utcnow())
+        try:
+            embed.description = "**" + r["url"] + "**"
+            embed.set_image(url=r["screenshot"])
+        except KeyError:
+            await info_message.edit(content="Alan adı çözülemedi!")
+            return 
+        embed.set_footer(text=ctx.author, icon_url=ctx.author.avatar_url)
         await info_message.edit(content="", embed=embed)
-
+        
 
 def setup(bot):
     bot.add_cog(Misc(bot))
