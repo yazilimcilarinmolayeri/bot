@@ -97,10 +97,10 @@ class Misc(commands.Cog):
             embed.set_image(url=r["screenshot"])
         except KeyError:
             await info_message.edit(content="Alan adı çözülemedi!")
-            return 
+            return
         embed.set_footer(text=ctx.author, icon_url=ctx.author.avatar_url)
         await info_message.edit(content="", embed=embed)
-        
+
 
 def setup(bot):
     bot.add_cog(Misc(bot))

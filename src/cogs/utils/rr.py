@@ -65,7 +65,7 @@ class ReactionRole:
 
     async def add_role(self):
         """Kullanıcıya rol ekler. Mesaj gönderir. Eklediği tepkiyi siler."""
-        
+
         # Eğer rol sayısı 20'ye eşit yada fazla ise kullanıcı daha fazla rol alamaz.
         if len(self.member.roles) - 1 >= 20:
             await self.remove_reaction()

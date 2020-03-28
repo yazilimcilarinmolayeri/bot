@@ -23,12 +23,13 @@ from ast import literal_eval as le
 token = env.get("token")
 
 prefix = [
-    "+", "ymy+",
+    "+",
+    "ymy+",
 ]
 
 owner_ids = [
-    428273380844765185, 
-    335119989893890049, 
+    428273380844765185,
+    335119989893890049,
     429276634072350720,
 ]
 

@@ -39,7 +39,7 @@ class YMYBot(commands.Bot):
         super().__init__(
             command_prefix=get_prefix, description=description, case_insensitive=True,
         )
-        
+
         self.uptime = ""
         self.embed_color = 0x36393F
         self.owner_ids = set(config.owner_ids)

@@ -26,16 +26,16 @@ class Events(commands.Cog):
     async def on_ready(self):
         if not hasattr(self, "uptime"):
             self.bot.uptime = datetime.datetime.now()
-        
+
         print(f"{self.bot.user} (ID: {self.bot.user.id})")
         print(f"discord.py version: {discord.__version__}")
-        
+
         await meta.update_activity_name(self.bot)
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, err):
         msa = errors.MissingRequiredArgument
-        
+
         if isinstance(err, commands.CommandInvokeError):
             original = err.original
 
@@ -46,7 +46,7 @@ class Events(commands.Cog):
 
         if isinstance(err, commands.CheckFailure):
             await ctx.send("Bu komutu kullanabilmek için yeterli izne sahip değilsin!")
-        
+
         if isinstance(err, msa) or isinstance(err, errors.BadArgument):
             # Çağrılan komutda eksik yada hatalı argüman var ise yardım mesajı gönderilir.
             helper = (
@@ -57,7 +57,9 @@ class Events(commands.Cog):
             await ctx.send_help(helper)
 
         if isinstance(err, errors.CommandOnCooldown):
-            await ctx.send(f"Bu komut bekleme modunda! {err.retry_after:.1f}s sonra tekrar dene.")
+            await ctx.send(
+                f"Bu komut bekleme modunda! {err.retry_after:.1f}s sonra tekrar dene."
+            )
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
@@ -141,7 +143,6 @@ class Events(commands.Cog):
                 await member.add_roles(ymy_role)
                 await member.send("\N{BUSTS IN SILHOUETTE} YMY Üyesi rolü verildi.")
                 # await message.remove_reaction(emoji=payload.emoji, member=member)
-            
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
