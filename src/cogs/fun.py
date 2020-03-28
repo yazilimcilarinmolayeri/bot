@@ -2,7 +2,9 @@
 #
 
 import random
+from io import BytesIO
 from datetime import datetime
+from PIL import Image, ImageFilter
 
 import config
 from .utils import http
@@ -18,89 +20,9 @@ class Fun(commands.Cog, name="Funny"):
         self.bot = bot
         self.loads_meme_commands()
 
-    def loads_meme_commands(self):
-        # teamplate: {"name": "", "lname": "", "id": }
-        meme_cmds = [
-            {"name": "stonks", "lname": "Stonks", "id": 186821996},
-            {"name": "twobuttons", "lname": "Two Buttons", "id": 87743020},
-            {"name": "buttonslam", "lname": "Blank Nut Button", "id": 119139145},
-            {"name": "changemymind", "lname": "Change My Mind", "id": 129242436},
-            {"name": "maurice", "lname": "Hide the Pain Harold", "id": 27813981},
-            {"name": "batmanslap", "lname": "Batman Slapping Robin", "id": 438680},
-            {"name": "winniepooh", "lname": "Tuxedo Winnie The Pooh", "id": 178591752},
-            {"name": "womenyelling", "lname": "	Woman Yelling At Cat", "id": 188390779},
-            {"name": "disappointed", "lname": "Disappointed Black Guy", "id": 50421420},
-            {
-                "name": "thinkingguy",
-                "lname": "Roll Safe Think About It",
-                "id": 89370399,
-            },
-        ]
-
-        # {"name": "spiderman", "lname": "Spiderman Presentation", "id": 176754986}
-        # {"name": "dogecloud", "lname": "Doge Cloud", "id": 221181003}
-        # {"name": "monkeypuppet", "lname": "Monkey Puppet", "id": 14890980}
-
-        for row in meme_cmds:
-            command = commands.Command(
-                name=row["name"],
-                func=Fun.meme_command,
-                help=f"`{row['lname'].strip()}` adlı meme'yi üretir.",
-            )
-
-            command.meme_id = row["id"]
-            command.cog = self
-            self.meme.add_command(command)
-
-    # =============================================================================
-    #     def get_dong(self, user):
-    #         """Penis'in ascci içeriğini ve uzunluk değerini döndürür."""
-    #
-    #         # state = random.getstate()
-    #         random.seed(user.id)
-    #         size = "_" * random.randint(0, 30)
-    #
-    #         #
-    #         # seed() fonksiyonu, rastgele sayılar üretirken kullanılan tam sayı
-    #         # başlangıç değerini ayarlar. Eğer hep o sabit sayıyı verirsen hep
-    #         # aynı randomu üretirler, çünkü aslında random değiller :)
-    #         #
-    #
-    #         dong_ascii = f"  ###{size} _\n    _{size}│_-)\n(_)_)"
-    #         # random.setstate(state)
-    #
-    #         return {"ascii": dong_ascii, "size": len(size)}
-    #
-    #     @commands.guild_only()
-    #     @commands.group(aliases=["çük"], invoke_without_command=True, hidden=True)
-    #     @commands.cooldown(1, 5, commands.BucketType.user)
-    #     async def dong(self, ctx, *, user: discord.Member = None):
-    #         """Kullanıcının penis boyunu hesaplar. Bu değer asla ama asla değişmez!"""
-    #
-    #         if user is None:
-    #             user = ctx.author
-    #
-    #         dong = self.get_dong(user)
-    #
-    #         embed = discord.Embed(color=self.bot.embed_color)
-    #         embed.title = f"{user} Dong Size"
-    #         embed.description = f"```{dong['ascii']}```"
-    #         await ctx.send(embed=embed)
-    #
-    #     @dong.command(aliases=["yarıştır"])
-    #     async def race(self, ctx, *, user: discord.Member):
-    #         """İki kullanıcının penis boyunu yarıştırır."""
-    #
-    #         author = ctx.author
-    #
-    #         a_dong = self.get_dong(author)
-    #         u_dong = self.get_dong(user)
-    #
-    #         embed = discord.Embed(color=self.bot.embed_color)
-    #         embed.title = f"{author} vs {user}"
-    #         embed.description = f"```{a_dong['ascii']}\n\n{u_dong['ascii']}```"
-    #         await ctx.send(embed=embed)
-    # =============================================================================
+    async def get_image_bytes(self, image):
+        async with self.bot.session.get(str(image)) as response:
+            return await response.read()
 
     @commands.command(aliases=["kedi"])
     @commands.cooldown(1, 5, commands.BucketType.user)
@@ -116,24 +38,31 @@ class Fun(commands.Cog, name="Funny"):
             embed=discord.Embed(color=self.bot.embed_color).set_image(url=r["url"])
         )
 
-    @commands.group(invoke_without_command=True)
-    @commands.cooldown(1, 5, commands.BucketType.user)
-    async def meme(self, ctx, command=None):
-        """
-        Verilen argümanlar dahilinde meme üretir.
-        
-        Örnek:
-            ymy+meme winniepooh "deneme" "deneme"
-        """
+    def loads_meme_commands(self):
+        # teamplate: {"name": "", "lname": "", "id": }
+        meme_cmds = [
+            {"name": "stonks", "lname": "Stonks", "id": 186821996},
+            {"name": "twobuttons", "lname": "Two Buttons", "id": 87743020},
+            {"name": "thinkingguy", "lname": "Thinking Guy", "id": 89370399},
+            {"name": "buttonslap", "lname": "Blank Nut Button", "id": 119139145},
+            {"name": "changemymind", "lname": "Change My Mind", "id": 129242436},
+            {"name": "maurice", "lname": "Hide the Pain Harold", "id": 27813981},
+            {"name": "batmanslap", "lname": "Batman Slapping Robin", "id": 438680},
+            {"name": "winniepooh", "lname": "Tuxedo Winnie The Pooh", "id": 178591752},
+            {"name": "womenyelling", "lname": "	Woman Yelling At Cat", "id": 188390779},
+            {"name": "disappointed", "lname": "Disappointed Black Guy", "id": 50421420},
+        ]
 
-        cmds = [f"`{c.name}`" for c in self.bot.get_command(str(ctx.command)).commands]
+        for row in meme_cmds:
+            command = commands.Command(
+                name=row["name"],
+                func=Fun.meme_command,
+                help=f"`{row['lname'].strip()}` adlı meme'yi üretir.",
+            )
 
-        embed = discord.Embed(color=self.bot.embed_color)
-        embed.title = "Meme Komutları"
-        embed.description = ", ".join(cmds)
-        embed.set_footer(text=f"{ctx.prefix}help meme <command>")
-
-        await ctx.send(embed=embed)
+            command.meme_id = row["id"]
+            command.cog = self
+            self.meme.add_command(command)
 
     async def meme_generator(self, ctx, meme_id: int, text0, text1):
         """
@@ -155,6 +84,25 @@ class Fun(commands.Cog, name="Funny"):
             )
 
         return r["data"]["url"]
+
+    @commands.group(invoke_without_command=True)
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    async def meme(self, ctx, command=None):
+        """
+        Verilen argümanlar dahilinde meme üretir.
+        
+        Örnek:
+            ymy+meme winniepooh "deneme" "deneme"
+        """
+
+        cmds = [f"`{c.name}`" for c in self.bot.get_command(str(ctx.command)).commands]
+
+        embed = discord.Embed(color=self.bot.embed_color)
+        embed.title = "Meme Komutları"
+        embed.description = ", ".join(cmds)
+        embed.set_footer(text=f"{ctx.prefix}help meme <command>")
+
+        await ctx.send(embed=embed)
 
     async def meme_command(self, ctx, text0, text1=""):
         embed = discord.Embed(color=self.bot.embed_color)
@@ -218,6 +166,35 @@ class Fun(commands.Cog, name="Funny"):
         embed = discord.Embed(color=self.bot.embed_color)
         embed.set_image(url=r["message"])
         await ctx.send(embed=embed)
+
+    @commands.command(name="ayça_22", aliases=["ayca_22"])
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    async def ayca22(self, ctx, user: discord.Member = None):
+        """Ayça_22 oturum açtı bildirimine kişinin avatarını ekler."""
+
+        user = user or ctx.author
+        avatar = user.avatar_url_as(static_format="png")
+
+        avatar_bytes = await self.get_image_bytes(avatar)
+
+        async with ctx.typing():
+            with Image.open(BytesIO(avatar_bytes)) as img:
+                ayca_22 = Image.open("src/cogs/utils/data/ayca_22.png")
+                bg = Image.new("RGB", ayca_22.size, "white")
+                img_small = img.resize((64, 64), Image.BILINEAR)
+
+                bg.paste(img_small.resize((195, 195), Image.NEAREST), (5, 125))
+                bg.paste(ayca_22, (0, 0), ayca_22.convert("RGBA"))
+
+                output_buffer = BytesIO()
+                bg.save(output_buffer, "png")
+                output_buffer.seek(0)
+
+        file = discord.File(fp=output_buffer, filename="image.png")
+        embed = discord.Embed(color=self.bot.embed_color)
+        embed.set_image(url="attachment://image.png")
+
+        await ctx.send(file=file, embed=embed)
 
 
 def setup(bot):
