@@ -2,6 +2,7 @@ pip
 emoji
 arrow
 psutil
+Pillow
 jishaku
 humanize
 discord.py

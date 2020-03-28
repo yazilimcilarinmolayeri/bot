@@ -62,6 +62,7 @@ Düzenleniyor...
 * [emoji](https://github.com/carpedm20/emoji)
 * [arrow](https://github.com/crsmithdev/arrow)
 * [psutil](https://github.com/giampaolo/psutil)
+* [Pillow](https://github.com/python-pillow/Pillow)
 * [jishaku](https://github.com/Gorialis/jishaku)
 * [humanize](https://github.com/jmoiron/humanize)
 * [discord.py](https://github.com/Rapptz/discord.py)
