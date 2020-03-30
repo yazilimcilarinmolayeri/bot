@@ -13,9 +13,9 @@ import inspect
 import humanize
 import platform
 import datetime
-from PIL import Image
 from io import BytesIO
 from bs4 import BeautifulSoup
+from PIL import Image, ImageDraw
 
 from .utils import http
 
@@ -71,7 +71,7 @@ class Covid19:
     async def get_country_stats(self, country):
         params = f"/countries/{country}"
         c = await self.get_data(params=params, res_method="json")
-        
+
         c_stats = {}
         c_stats["confirmed"] = c["confirmed"]["value"]
         c_stats["recovered"] = c["recovered"]["value"]
@@ -98,6 +98,10 @@ class Info(commands.Cog, name="Information"):
         self.covid19 = Covid19(bot)
         self.corona_image = "https://i.imgur.com/PZ5r1IB.png"
         self.reload_icon = "https://i.imgur.com/aouXufT.png"
+
+        self.gold = "<:gold:694271455189270580>"
+        self.green = "<:green:694271455449448458>"
+        self.red = "<:red:694271455483002890>"
 
     async def get_image_bytes(self, image):
         async with self.bot.session.get(str(image)) as response:
@@ -173,6 +177,42 @@ class Info(commands.Cog, name="Information"):
 
         await ctx.send(embed=embed)
 
+    def draw_horizontal_chart(self, confirmed, recovered, deaths):
+        margin = 25
+        mh = margin / 2
+        w, h = (500 - margin, 15)
+        gold = (241, 196, 15)  # f1c40f
+        green = (46, 204, 113)  # 2ecc71
+        red = (231, 76, 60)  # e74c3c
+
+        total = confirmed + recovered + deaths
+        case_rate = confirmed / total * w
+        recovery_rate = recovered / total * w
+        mortality_rate = deaths / total * w
+
+        img = Image.new("RGB", (w + margin, h), (47, 49, 54))
+        draw = ImageDraw.Draw(img)
+
+        draw.rectangle((mh, 0, mh + case_rate, h), fill=gold)
+        draw.rectangle(
+            (mh + case_rate, 0, mh + case_rate + recovery_rate, h), fill=green
+        )
+        draw.rectangle(
+            (
+                mh + case_rate + recovery_rate,
+                0,
+                mh + case_rate + recovery_rate + mortality_rate,
+                h,
+            ),
+            fill=red,
+        )
+
+        output_buffer = BytesIO()
+        img.save(output_buffer, "png")
+        output_buffer.seek(0)
+
+        return output_buffer
+
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.group(aliases=["cv", "covid19"], invoke_without_command=True)
     async def corona(self, ctx, country=None):
@@ -180,7 +220,9 @@ class Info(commands.Cog, name="Information"):
 
         async with ctx.typing():
             global_stats = await self.covid19.get_global_stats()
-                
+            countries = await self.covid19.get_countries()
+            last_update = await self.covid19.last_update()
+
         if country != None:
             command = self.bot.get_command("cv country")
             await command.__call__(ctx=ctx, country=country)
@@ -189,7 +231,6 @@ class Info(commands.Cog, name="Information"):
         confirmed = global_stats["confirmed"]
         recovered = global_stats["recovered"]
         deaths = global_stats["deaths"]
-        countries = await self.covid19.get_countries()
 
         mortality_rate = round((deaths / confirmed * 100), 2)
         recovery_rate = round((recovered / confirmed * 100), 2)
@@ -198,16 +239,21 @@ class Info(commands.Cog, name="Information"):
         embed.set_thumbnail(url=self.corona_image)
         embed.title = "COVID-19 Virüsü Global İstatistikleri"
 
-        embed.add_field(name="Doğrulanan Vaka", value=f"{confirmed:,d}")
-        embed.add_field(name="İyileşen Kişi", value=f"{recovered:,d}")
-        embed.add_field(name="Ölen Kişi", value=f"{deaths:,d}")
+        embed.add_field(name="Doğrulanan Vaka", value=f"{self.gold} {confirmed:,d}")
+        embed.add_field(name="İyileşen Kişi", value=f"{self.green} {recovered:,d}")
+        embed.add_field(name="Ölen Kişi", value=f"{self.red} {deaths:,d}")
         embed.add_field(name="Görülen Ülke", value=f"{len(countries):,d}")
         embed.add_field(name="İyileşme Oranı", value=f"{recovery_rate}%")
         embed.add_field(name="Ölüm Oranı", value=f"{mortality_rate}%")
 
-        last_update = await self.covid19.last_update()
-        embed.set_footer(text=f"Son güncelleme: {last_update}", icon_url=self.reload_icon)
-        await ctx.send(embed=embed)
+        chart = self.draw_horizontal_chart(confirmed, recovered, deaths)
+        file = discord.File(fp=chart, filename="chart.png")
+        embed.set_image(url="attachment://chart.png")
+
+        embed.set_footer(
+            text=f"Son güncelleme: {last_update}", icon_url=self.reload_icon
+        )
+        await ctx.send(file=file, embed=embed)
 
     @corona.command(name="countries", aliases=["ülkeler"])
     async def corona_countries(self, ctx):
@@ -225,12 +271,14 @@ class Info(commands.Cog, name="Information"):
                 clist[text] += "`" + c["name"] + "`, "
 
         embed = discord.Embed(color=self.bot.embed_color)
-        embed.description = f"Ülke istatistikleri için: `[corona/cv/covid19] [country_name]`"
+        embed.description = (
+            f"Ülke istatistikleri için: `[corona/cv/covid19] [country_name]`"
+        )
         embed.title = f"COVID-19 Virüsü Bulunan Ülkeler ({len(countries)})"
 
         for v in clist:
             embed.add_field(name=f"Sayfa {v}", value=clist[v][0:-2], inline=False)
-        
+
         # embed.set_footer(text="[corona/cv/covid19] [country_name]")
         await ctx.send(embed=embed)
 
@@ -251,15 +299,22 @@ class Info(commands.Cog, name="Information"):
         embed.set_thumbnail(url=self.corona_image)
         embed.title = f"COVID-19 Virüsü İstatistikleri ({country})"
 
-        embed.add_field(name="Doğrulanan Vaka", value=f"{confirmed:,d}")
-        embed.add_field(name="İyileşen Kişi", value=f"{recovered:,d}")
-        embed.add_field(name="Ölen Kişi", value=f"{deaths:,d}")
+        embed.add_field(name="Doğrulanan Vaka", value=f"{self.gold} {confirmed:,d}")
+        embed.add_field(name="İyileşen Kişi", value=f"{self.green} {recovered:,d}")
+        embed.add_field(name="Ölen Kişi", value=f"{self.red} {deaths:,d}")
+        embed.add_field(name="\u200b", value="\u200b")
         embed.add_field(name="İyileşme Oranı", value=f"{recovery_rate}%")
         embed.add_field(name="Ölüm Oranı", value=f"{mortality_rate}%")
-        embed.add_field(name="\u200b", value="\u200b")
 
-        embed.set_footer(text=f"Son güncelleme: {country_stats['lastUpdate']}", icon_url=self.reload_icon)
-        await ctx.send(embed=embed)
+        chart = self.draw_horizontal_chart(confirmed, recovered, deaths)
+        file = discord.File(fp=chart, filename="chart.png")
+        embed.set_image(url="attachment://chart.png")
+
+        embed.set_footer(
+            text=f"Son güncelleme: {country_stats['lastUpdate']}",
+            icon_url=self.reload_icon,
+        )
+        await ctx.send(file=file, embed=embed)
 
     @corona.command(name="top", aliases=["üst"])
     async def corona_top(self, ctx):
@@ -288,11 +343,11 @@ class Info(commands.Cog, name="Information"):
     @corona.command(name="global", aliases=["küresel"])
     async def corona_global(self, ctx):
         """Dünya geneli virüs istatistiklerini görsel olarak paylaşır."""
-                
+
         embed = discord.Embed(color=self.bot.embed_color)
         embed.title = f"COVID-19 Virüsü Global İstatistik Grafiği"
         embed.set_image(url="https://covid19.mathdro.id/api/og")
-        
+
         await ctx.send(embed=embed)
 
     @corona.command(name="info", aliases=["bilgi"])
@@ -301,14 +356,14 @@ class Info(commands.Cog, name="Information"):
 
         with open("src/cogs/utils/data/covid19_info_data.json") as f:
             i = json.load(f)
-            
+
         embed = discord.Embed(color=self.bot.embed_color)
         embed.title = "COVID-19 (Yeni Koronavirüs Hastalığı) Nedir?"
         embed.description = i["Nedir?"]
-        
+
         for title in i["diger"]:
             embed.add_field(name=title, value=i["diger"][title], inline=False)
-        
+
         embed.set_footer(text="T.C. Sağlık Bakanlığı")
         await ctx.send(embed=embed)
 
@@ -329,7 +384,7 @@ class Info(commands.Cog, name="Information"):
             f"API adresi: [{base_url}]({base_url})\n"
             f"Kaynak kod: [{source}]({source})\n"
         )
-        
+
         await ctx.send(embed=embed)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
