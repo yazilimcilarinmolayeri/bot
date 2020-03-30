@@ -4,13 +4,28 @@
 import random
 from io import BytesIO
 from datetime import datetime
-from PIL import Image, ImageFilter
+from PIL import Image, ImageDraw, ImageFilter
 
 import config
 from .utils import http
 
 import discord
 from discord.ext import commands
+
+
+def mask_circle_transparent(pil_img, blur_radius, offset=0):
+    offset = blur_radius * 2 + offset
+    mask = Image.new("L", pil_img.size, 0)
+    draw = ImageDraw.Draw(mask)
+    draw.ellipse(
+        (offset, offset, pil_img.size[0] - offset, pil_img.size[1] - offset), fill=255
+    )
+    mask = mask.filter(ImageFilter.GaussianBlur(blur_radius))
+
+    result = pil_img.copy()
+    result.putalpha(mask)
+
+    return result
 
 
 class Fun(commands.Cog, name="Funny"):
@@ -170,7 +185,7 @@ class Fun(commands.Cog, name="Funny"):
     @commands.command(name="ayça_22", aliases=["ayca_22"])
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def ayca22(self, ctx, user: discord.Member = None):
-        """Ayça_22 oturum açtı bildirimine kişinin avatarını ekler."""
+        """'Ayça_22 şimdi kamera açtı' bildirimine kişinin avatarını ekler."""
 
         user = user or ctx.author
         avatar = user.avatar_url_as(static_format="png")
@@ -188,6 +203,32 @@ class Fun(commands.Cog, name="Funny"):
 
                 output_buffer = BytesIO()
                 bg.save(output_buffer, "png")
+                output_buffer.seek(0)
+
+        file = discord.File(fp=output_buffer, filename="image.png")
+        embed = discord.Embed(color=self.bot.embed_color)
+        embed.set_image(url="attachment://image.png")
+
+        await ctx.send(file=file, embed=embed)
+
+    @commands.command(aliases=["mike"])
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    async def wazowski(self, ctx, user: discord.Member = None):
+        """'Mike Wazowski görseline kişinin avatarını ekler."""
+
+        user = user or ctx.author
+        avatar = user.avatar_url_as(static_format="png")
+
+        avatar_bytes = await self.get_image_bytes(avatar)
+
+        async with ctx.typing():
+            with Image.open(BytesIO(avatar_bytes)) as img:
+                mike = Image.open("src/cogs/utils/data/wazowski.png")
+                img_circle = mask_circle_transparent(img.resize((250, 250)), 5)
+                mike.paste(img_circle, (100, 70), img_circle)
+
+                output_buffer = BytesIO()
+                mike.save(output_buffer, "png")
                 output_buffer.seek(0)
 
         file = discord.File(fp=output_buffer, filename="image.png")
