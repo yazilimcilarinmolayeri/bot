@@ -5,6 +5,7 @@
 # Davet bağlantısı: https://discord.gg/KazHgb2
 #
 
+import ssl
 import aiohttp
 from collections import Counter
 
@@ -34,6 +35,10 @@ def get_prefix(bot, msg):
     return [f"<@!{user_id}> ", f"<@{user_id}> "] + config.prefix
 
 
+custom_context = ssl.create_default_context()
+conn = aiohttp.TCPConnector(ssl=custom_context)
+
+
 class YMYBot(commands.Bot):
     def __init__(self):
         super().__init__(
@@ -43,7 +48,7 @@ class YMYBot(commands.Bot):
         self.uptime = ""
         self.embed_color = 0x36393F
         self.owner_ids = set(config.owner_ids)
-        self.session = aiohttp.ClientSession(loop=self.loop)
+        self.session = aiohttp.ClientSession(loop=self.loop, connector=conn)
 
         self._auto_spam_count = Counter()
         self.spam_control = commands.CooldownMapping.from_cooldown(

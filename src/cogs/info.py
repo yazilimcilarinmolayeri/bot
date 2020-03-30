@@ -5,12 +5,10 @@
 #
 
 import os
-import ssl
 import time
 import psutil
 import aiohttp
 import inspect
-import certifi
 import humanize
 import platform
 import datetime
@@ -23,9 +21,6 @@ from .utils import http
 import discord
 from discord.ext import commands
 from discord.utils import get
-
-
-sslcontext = ssl.create_default_context(cafile=certifi.where())
 
 
 class Covid19:
@@ -43,7 +38,7 @@ class Covid19:
         return dt
 
     async def get_data(self, params: str = "", res_method=None):
-        async with self.session.get(self.api_url + params, ssl=sslcontext) as resp:
+        async with self.session.get(self.api_url + params) as resp:
             if res_method == "json":
                 return await resp.json()
             elif res_method == "text":
@@ -309,7 +304,7 @@ class Info(commands.Cog, name="Information"):
         embed.description = f"Kaynak: [{url}]({url})"
 
         async with ctx.typing():
-            async with self.bot.session.get(url, ssl=sslcontext) as resp:
+            async with self.bot.session.get(url) as resp:
                 resp = await resp.text()
             soup = BeautifulSoup(resp, "html.parser")
 
