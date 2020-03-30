@@ -6,6 +6,7 @@
 
 import os
 import time
+import json
 import psutil
 import aiohttp
 import inspect
@@ -70,7 +71,7 @@ class Covid19:
     async def get_country_stats(self, country):
         params = f"/countries/{country}"
         c = await self.get_data(params=params, res_method="json")
-
+        
         c_stats = {}
         c_stats["confirmed"] = c["confirmed"]["value"]
         c_stats["recovered"] = c["recovered"]["value"]
@@ -179,7 +180,7 @@ class Info(commands.Cog, name="Information"):
 
         async with ctx.typing():
             global_stats = await self.covid19.get_global_stats()
-
+                
         if country != None:
             command = self.bot.get_command("cv country")
             await command.__call__(ctx=ctx, country=country)
@@ -297,7 +298,19 @@ class Info(commands.Cog, name="Information"):
     @corona.command(name="info", aliases=["bilgi"])
     async def corona_info(self, ctx):
         """Virüsü hakkında detaylı bilgi verir."""
-        pass
+
+        with open("src/cogs/utils/data/covid19_info_data.json") as f:
+            i = json.load(f)
+            
+        embed = discord.Embed(color=self.bot.embed_color)
+        embed.title = "COVID-19 (Yeni Koronavirüs Hastalığı) Nedir?"
+        embed.description = i["Nedir?"]
+        
+        for title in i["diger"]:
+            embed.add_field(name=title, value=i["diger"][title], inline=False)
+        
+        embed.set_footer(text="T.C. Sağlık Bakanlığı")
+        await ctx.send(embed=embed)
 
     @corona.command(name="about", aliases=["hakkında"])
     async def corona_api_about(self, ctx):
@@ -316,7 +329,7 @@ class Info(commands.Cog, name="Information"):
             f"API adresi: [{base_url}]({base_url})\n"
             f"Kaynak kod: [{source}]({source})\n"
         )
-
+        
         await ctx.send(embed=embed)
 
     @commands.cooldown(1, 5, commands.BucketType.user)
