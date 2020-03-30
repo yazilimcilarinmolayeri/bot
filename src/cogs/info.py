@@ -6,13 +6,94 @@
 
 import os
 import time
+import json
 import psutil
 import aiohttp
 import inspect
+import humanize
 import platform
+import datetime
+from PIL import Image
+from io import BytesIO
+from bs4 import BeautifulSoup
+
+from .utils import http
 
 import discord
 from discord.ext import commands
+from discord.utils import get
+
+
+class Covid19:
+    """COVID-19 API Sınıfı"""
+
+    def __init__(self, bot):
+        self.session = bot.session
+        self.api_url = "https://covid19.mathdro.id/api"
+
+    def _format(self, date_time):
+        dt = datetime.datetime.strptime(date_time, "%Y-%m-%dT%H:%M:%S.%fZ").strftime(
+            "%d.%m.%Y %H:%M:%S"
+        )
+
+        return dt
+
+    async def get_data(self, params: str = "", res_method=None):
+        async with self.session.get(self.api_url + params) as resp:
+            if res_method == "json":
+                return await resp.json()
+            elif res_method == "text":
+                return await resp.text()
+            else:
+                return resp
+
+    async def last_update(self):
+        r = await self.get_data(res_method="json")
+
+        return self._format(r["lastUpdate"])
+
+    async def graph_image(self):
+        params = "/go"
+        image = await self.get_data(params=params, res_method="json")
+
+        return image
+
+    async def get_global_stats(self):
+        g = await self.get_data(res_method="json")
+
+        g_stats = {}
+        g_stats["confirmed"] = g["confirmed"]["value"]
+        g_stats["recovered"] = g["recovered"]["value"]
+        g_stats["deaths"] = g["deaths"]["value"]
+
+        return g_stats
+
+    async def get_countries(self):
+        params = "/countries"
+        countries = await self.get_data(params=params, res_method="json")
+
+        return countries["countries"]
+
+    async def get_country_stats(self, country):
+        params = f"/countries/{country}"
+        c = await self.get_data(params=params, res_method="json")
+
+        c_stats = {}
+        c_stats["confirmed"] = c["confirmed"]["value"]
+        c_stats["recovered"] = c["recovered"]["value"]
+        c_stats["deaths"] = c["deaths"]["value"]
+        c_stats["lastUpdate"] = self._format(c["lastUpdate"])
+
+        return c_stats
+
+    async def get_top(self, limit=12):
+        params = "/confirmed"
+        confirmed = await self.get_data(params=params, res_method="json")
+
+        return confirmed[0:limit]
+
+    async def get_flag(country):
+        pass
 
 
 class Info(commands.Cog, name="Information"):
@@ -20,6 +101,12 @@ class Info(commands.Cog, name="Information"):
 
     def __init__(self, bot):
         self.bot = bot
+        self.covid19 = Covid19(bot)
+        self.corona_image = "https://i.imgur.com/B33NdNm.png"
+
+    async def get_image_bytes(self, image):
+        async with self.bot.session.get(str(image)) as response:
+            return await response.read()
 
     @commands.command(aliases=["gecikme"])
     async def ping(self, ctx):
@@ -30,6 +117,18 @@ class Info(commands.Cog, name="Information"):
         # Ms cinsinden hesaplamak için 1000 ile çarpıyoruz.
         ping = (time.monotonic() - before) * 1000
         await message.edit(content=f"Pong! `{ping:.2f}`ms")
+
+    def get_bot_uptime(self):
+        humanize.i18n.activate("tr_TR")
+        return humanize.naturaldelta(self.bot.uptime)
+
+    @commands.command()
+    async def uptime(self, ctx):
+        """Botun ne kadar süredir aktif olduğunu söyler."""
+
+        await ctx.send(
+            "\N{HOURGLASS WITH FLOWING SAND}" f"Uptime: **`{self.get_bot_uptime()}`**"
+        )
 
     @commands.command(aliases=["kaynak"])
     async def source(self, ctx, *, command: str = None):
@@ -79,29 +178,190 @@ class Info(commands.Cog, name="Information"):
 
         await ctx.send(embed=embed)
 
-    @commands.command(aliases=["sys", "sistem"])
-    async def system(self, ctx):
-        """Botun çalıştığı sistem hakkında bilgi verir."""
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.group(aliases=["cv", "covid19"], invoke_without_command=True)
+    async def corona(self, ctx, country=None):
+        """Virüsünün global istatistiklerini görüntüler."""
 
-        embed = discord.Embed(colour=self.bot.embed_color)
-        embed.set_author(name=f"{self.bot.user.name} Sistem Bilgisi")
+        async with ctx.typing():
+            global_stats = await self.covid19.get_global_stats()
 
+        if country != None:
+            command = self.bot.get_command("cv country")
+            await command.__call__(ctx=ctx, country=country)
+            return
+
+        confirmed = global_stats["confirmed"]
+        recovered = global_stats["recovered"]
+        deaths = global_stats["deaths"]
+        countries = await self.covid19.get_countries()
+
+        mortality_rate = round((deaths / confirmed * 100), 2)
+        recovery_rate = round((recovered / confirmed * 100), 2)
+
+        embed = discord.Embed(color=self.bot.embed_color)
+        embed.set_thumbnail(url=self.corona_image)
+        embed.title = "COVID-19 Virüsü Global İstatistikleri"
+
+        embed.add_field(name="Doğrulanan Vaka", value=f"{confirmed:,d}")
+
+        embed.add_field(name="Ölen Kişi", value=f"{recovered:,d}")
+        embed.add_field(name="İyileşen Kişi", value=f"{deaths:,d}")
+        embed.add_field(name="Görülen Ülke", value=f"{len(countries):,d}")
+        embed.add_field(name="İyileşme Oranı", value=f"{recovery_rate}%")
+        embed.add_field(name="Ölüm Oranı", value=f"{mortality_rate}%")
+
+        last_update = await self.covid19.last_update()
+        embed.set_footer(text=f"Son güncelleme: {last_update}")
+        await ctx.send(embed=embed)
+
+    @corona.command(name="countries", aliases=["ülkeler"])
+    async def corona_countries(self, ctx):
+        """Virüs bulunan ülkeleri listeler."""
+
+        clist = {"1": "", "2": "", "3": ""}
+        text = "1"
+
+        async with ctx.typing():
+            countries = await self.covid19.get_countries()
+            for c in countries:
+                if len(clist[text]) >= 1000:
+                    text = str(int(text) + 1)
+                else:
+                    pass
+                try:
+                    clist[text] += "`" + c["name"] + "/" + c["iso2"] + "` "
+                except KeyError:
+                    clist[text] += "`" + c["name"] + "` "
+
+        embed = discord.Embed(color=self.bot.embed_color)
+        embed.title = f"COVID-19 Virüsü Bulunan Ülkeler ({len(countries)})"
+
+        for v in clist:
+            embed.add_field(name="\u200b", value=clist[v], inline=False)
+
+        await ctx.send(embed=embed)
+
+    @corona.command(name="country", aliases=["ülke"])
+    async def corona_country(self, ctx, country):
+        """Verilen ülkenin virüsü istatistiklerini görüntüler."""
+
+        async with ctx.typing():
+            country_stats = await self.covid19.get_country_stats(country)
+
+        confirmed = country_stats["confirmed"]
+        recovered = country_stats["recovered"]
+        deaths = country_stats["deaths"]
+        mortality_rate = round((deaths / confirmed * 100), 2)
+        recovery_rate = round((recovered / confirmed * 100), 2)
+
+        embed = discord.Embed(color=self.bot.embed_color)
+        embed.set_thumbnail(url=self.corona_image)
+        embed.title = f"COVID-19 Virüsü İstatistikleri ({country})"
+
+        embed.add_field(name="Doğrulanan Vaka", value=f"{confirmed:,d}")
+        embed.add_field(name="Ölen Kişi", value=f"{recovered:,d}")
+        embed.add_field(name="İyileşen Kişi", value=f"{deaths:,d}")
+        embed.add_field(name="İyileşme Oranı", value=f"{recovery_rate}%")
+        embed.add_field(name="Ölüm Oranı", value=f"{mortality_rate}%")
+        embed.add_field(name="\u200b", value="\u200b")
+
+        embed.set_footer(text=f"Son güncelleme: {country_stats['lastUpdate']}")
+        await ctx.send(embed=embed)
+
+    @corona.command(name="türkiye")
+    async def corona_turkey(self, ctx):
+        """Sağlık Bakanlığının hazırladığı Türkiye durumunu görüntüler."""
+
+        url = "https://covid19.saglik.gov.tr/"
+
+        embed = discord.Embed(color=self.bot.embed_color)
+        embed.title = f"Türkiye'deki Güncel COVID-19 Durumu"
+        embed.description = f"Kaynak: [{url}]({url})"
+
+        async with ctx.typing():
+            async with self.bot.session.get(url) as resp:
+                resp = await resp.text()
+            soup = BeautifulSoup(resp, "html.parser")
+
+        div = soup.find_all("div", attrs={"class": "col-sm-12 col-xs-12 col-lg-6"})
+        img1_url = url + div[0].find_all("img", attrs={"class": "img-fluid"})[0]["src"]
+        img2_url = url + div[1].find_all("img", attrs={"class": "img-fluid"})[0]["src"]
+
+        img1_bytes = await self.get_image_bytes(img1_url)
+        img2_bytes = await self.get_image_bytes(img2_url)
+
+        async with ctx.typing():
+            img1 = Image.open(BytesIO(img1_bytes))
+            img2 = Image.open(BytesIO(img2_bytes))
+
+            img1_x, img1_y = img1.size
+            img2_x, img2_y = img2.size
+            size = (img1_x, img1_y + img2_y)
+            bg = Image.new("RGB", size, "white")
+
+            bg.paste(img1, (0, 0))
+            bg.paste(img2, (0, img1_y))
+            img1.close()
+            img2.close()
+
+            output_buffer = BytesIO()
+            bg.save(output_buffer, "png")
+            output_buffer.seek(0)
+
+        file = discord.File(fp=output_buffer, filename="stats.png")
+        embed.set_image(url="attachment://stats.png")
+
+        await ctx.send(file=file, embed=embed)
+
+    @corona.command(name="top", aliases=["üst"])
+    async def corona_top(self, ctx):
+        """Virüsden en çok etkilenen 12 ülkeyi listeler."""
+
+        async with ctx.typing():
+            top = await self.covid19.get_top()
+
+        embed = discord.Embed(color=self.bot.embed_color)
+        embed.set_thumbnail(url=self.corona_image)
+        embed.title = f"En Çok COVID-19 Virüslü Vaka Bulunan {(len(top))} Ülke"
+
+        for country in top:
+            country_region = country["countryRegion"]
+
+            c = await self.covid19.get_country_stats(country_region)
+            confirmed = c["confirmed"]
+            recovered = c["recovered"]
+            deaths = c["deaths"]
+
+            value = f"Vaka: {confirmed:,d}\nÖlen: {recovered:,d}\nİyileşen: {deaths:,d}"
+            embed.add_field(name=country_region, value=value)
+
+        await ctx.send(embed=embed)
+
+    @corona.command(name="info", aliases=["bilgi"])
+    async def corona_info(self, ctx):
+        """COVID-19 virüsü hakkında bilgi verir."""
+        pass
+
+    @corona.command(name="about", aliases=["hakkında"])
+    async def corona_api_about(self, ctx):
+        """Kullanılan API hakkında bilgi verir."""
+
+        async with ctx.typing():
+            resp = await self.covid19.get_data()
+
+        base_url = "https://covid19.mathdro.id/"
+        source = "https://github.com/mathdroid/covid-19-api/"
+
+        embed = discord.Embed(color=self.bot.embed_color)
+        embed.title = f"COVID-19 API Hakkında"
         embed.description = (
-            "```HTTP\n"
-            f"OS : {platform.platform()}\n"
-            f"CPU: %{psutil.cpu_percent(interval=0.1)} "
-            f"(Çekirdek: {psutil.cpu_count()}, Frekans: "
-            f"{round(psutil.cpu_freq().current,2)} Mhz)\n"
-            f"RAM: {round(psutil.virtual_memory().used/1048576)}/"
-            f"{round(psutil.virtual_memory().total/1048576)} MB "
-            f"(Boşta: {round(psutil.virtual_memory().available/1048576)}MB)\n"
-            f"ROM: {round(psutil.disk_usage('/').used/1073741824,2)}/"
-            f"{round(psutil.disk_usage('/').total/1073741824,2)} GB "
-            f"(Boşta: {round(psutil.disk_usage('/').free/1073741824,2)}GB)"
-            "```"
+            f"Durum: `{resp.status} {resp.reason}`\n"
+            f"API adresi: [{base_url}]({base_url})\n"
+            f"Kaynak kod: [{source}]({source})\n"
         )
 
-        return await ctx.send(embed=embed)
+        await ctx.send(embed=embed)
 
 
 def setup(bot):
