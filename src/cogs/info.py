@@ -95,7 +95,8 @@ class Info(commands.Cog, name="Information"):
     def __init__(self, bot):
         self.bot = bot
         self.covid19 = Covid19(bot)
-        self.corona_image = "https://i.imgur.com/B33NdNm.png"
+        self.corona_image = "https://i.imgur.com/PZ5r1IB.png"
+        self.reload_icon = "https://i.imgur.com/aouXufT.png"
 
     async def get_image_bytes(self, image):
         async with self.bot.session.get(str(image)) as response:
@@ -204,7 +205,7 @@ class Info(commands.Cog, name="Information"):
         embed.add_field(name="Ölüm Oranı", value=f"{mortality_rate}%")
 
         last_update = await self.covid19.last_update()
-        embed.set_footer(text=f"Son güncelleme: {last_update}")
+        embed.set_footer(text=f"Son güncelleme: {last_update}", icon_url=self.reload_icon)
         await ctx.send(embed=embed)
 
     @corona.command(name="countries", aliases=["ülkeler"])
@@ -256,7 +257,7 @@ class Info(commands.Cog, name="Information"):
         embed.add_field(name="Ölüm Oranı", value=f"{mortality_rate}%")
         embed.add_field(name="\u200b", value="\u200b")
 
-        embed.set_footer(text=f"Son güncelleme: {country_stats['lastUpdate']}")
+        embed.set_footer(text=f"Son güncelleme: {country_stats['lastUpdate']}", icon_url=self.reload_icon)
         await ctx.send(embed=embed)
 
     @corona.command(name="top", aliases=["üst"])
@@ -293,8 +294,34 @@ class Info(commands.Cog, name="Information"):
         
         await ctx.send(embed=embed)
 
-    @corona.command(name="türkiye")
-    async def corona_turkey(self, ctx):
+    @corona.command(name="info", aliases=["bilgi"])
+    async def corona_info(self, ctx):
+        """Virüsü hakkında detaylı bilgi verir."""
+        pass
+
+    @corona.command(name="about", aliases=["hakkında"])
+    async def corona_api_about(self, ctx):
+        """Kullanılan API hakkında bilgi verir."""
+
+        async with ctx.typing():
+            resp = await self.covid19.get_data()
+
+        base_url = "https://covid19.mathdro.id/"
+        source = "https://github.com/mathdroid/covid-19-api/"
+
+        embed = discord.Embed(color=self.bot.embed_color)
+        embed.title = f"COVID-19 API Hakkında"
+        embed.description = (
+            f"Durum: {resp.status} {resp.reason}\n"
+            f"API adresi: [{base_url}]({base_url})\n"
+            f"Kaynak kod: [{source}]({source})\n"
+        )
+
+        await ctx.send(embed=embed)
+
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.command(aliases=["cvtr", "covid19tr"])
+    async def coronatr(self, ctx):
         """Sağlık Bakanlığının hazırladığı Türkiye durumunu görüntüler."""
 
         url = "https://covid19.saglik.gov.tr/"
@@ -337,31 +364,6 @@ class Info(commands.Cog, name="Information"):
         embed.set_image(url="attachment://stats.png")
 
         await ctx.send(file=file, embed=embed)
-
-    @corona.command(name="info", aliases=["bilgi"])
-    async def corona_info(self, ctx):
-        """Virüsü hakkında detaylı bilgi verir."""
-        pass
-
-    @corona.command(name="about", aliases=["hakkında"])
-    async def corona_api_about(self, ctx):
-        """Kullanılan API hakkında bilgi verir."""
-
-        async with ctx.typing():
-            resp = await self.covid19.get_data()
-
-        base_url = "https://covid19.mathdro.id/"
-        source = "https://github.com/mathdroid/covid-19-api/"
-
-        embed = discord.Embed(color=self.bot.embed_color)
-        embed.title = f"COVID-19 API Hakkında"
-        embed.description = (
-            f"Durum: {resp.status} {resp.reason}\n"
-            f"API adresi: [{base_url}]({base_url})\n"
-            f"Kaynak kod: [{source}]({source})\n"
-        )
-
-        await ctx.send(embed=embed)
 
 
 def setup(bot):
