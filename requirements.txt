@@ -6,3 +6,4 @@ Pillow
 jishaku
 humanize
 discord.py
+beautifulsoup4

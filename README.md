@@ -66,6 +66,7 @@ Düzenleniyor...
 * [jishaku](https://github.com/Gorialis/jishaku)
 * [humanize](https://github.com/jmoiron/humanize)
 * [discord.py](https://github.com/Rapptz/discord.py)
+* [beautifulsoup4](https://code.launchpad.net/beautifulsoup)
 
 ## Bağlantılar
 Projeyi test etmek, hakkında merak ettiklerini öğrenmek için [destek](https://discord.gg/KazHgb2) sunucusuna katıl.
