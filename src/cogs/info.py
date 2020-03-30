@@ -5,11 +5,12 @@
 #
 
 import os
+import ssl
 import time
-import json
 import psutil
 import aiohttp
 import inspect
+import certifi
 import humanize
 import platform
 import datetime
@@ -22,6 +23,9 @@ from .utils import http
 import discord
 from discord.ext import commands
 from discord.utils import get
+
+
+sslcontext = ssl.create_default_context(cafile=certifi.where())
 
 
 class Covid19:
@@ -39,7 +43,7 @@ class Covid19:
         return dt
 
     async def get_data(self, params: str = "", res_method=None):
-        async with self.session.get(self.api_url + params) as resp:
+        async with self.session.get(self.api_url + params, ssl=sslcontext) as resp:
             if res_method == "json":
                 return await resp.json()
             elif res_method == "text":
@@ -51,12 +55,6 @@ class Covid19:
         r = await self.get_data(res_method="json")
 
         return self._format(r["lastUpdate"])
-
-    async def graph_image(self):
-        params = "/go"
-        image = await self.get_data(params=params, res_method="json")
-
-        return image
 
     async def get_global_stats(self):
         g = await self.get_data(res_method="json")
@@ -204,9 +202,8 @@ class Info(commands.Cog, name="Information"):
         embed.title = "COVID-19 Virüsü Global İstatistikleri"
 
         embed.add_field(name="Doğrulanan Vaka", value=f"{confirmed:,d}")
-
-        embed.add_field(name="Ölen Kişi", value=f"{recovered:,d}")
-        embed.add_field(name="İyileşen Kişi", value=f"{deaths:,d}")
+        embed.add_field(name="İyileşen Kişi", value=f"{recovered:,d}")
+        embed.add_field(name="Ölen Kişi", value=f"{deaths:,d}")
         embed.add_field(name="Görülen Ülke", value=f"{len(countries):,d}")
         embed.add_field(name="İyileşme Oranı", value=f"{recovery_rate}%")
         embed.add_field(name="Ölüm Oranı", value=f"{mortality_rate}%")
@@ -217,11 +214,10 @@ class Info(commands.Cog, name="Information"):
 
     @corona.command(name="countries", aliases=["ülkeler"])
     async def corona_countries(self, ctx):
-        """Virüs bulunan ülkeleri listeler."""
+        """Virüs bulunan ülkelerin bir listesini döndürür."""
 
         clist = {"1": "", "2": "", "3": ""}
         text = "1"
-
         async with ctx.typing():
             countries = await self.covid19.get_countries()
             for c in countries:
@@ -229,22 +225,21 @@ class Info(commands.Cog, name="Information"):
                     text = str(int(text) + 1)
                 else:
                     pass
-                try:
-                    clist[text] += "`" + c["name"] + "/" + c["iso2"] + "` "
-                except KeyError:
-                    clist[text] += "`" + c["name"] + "` "
+                clist[text] += "`" + c["name"] + "`, "
 
         embed = discord.Embed(color=self.bot.embed_color)
+        embed.description = f"Ülke istatistikleri için: `[corona/cv/covid19] [country_name]`"
         embed.title = f"COVID-19 Virüsü Bulunan Ülkeler ({len(countries)})"
 
         for v in clist:
-            embed.add_field(name="\u200b", value=clist[v], inline=False)
-
+            embed.add_field(name=f"Sayfa {v}", value=clist[v][0:-2], inline=False)
+        
+        # embed.set_footer(text="[corona/cv/covid19] [country_name]")
         await ctx.send(embed=embed)
 
     @corona.command(name="country", aliases=["ülke"])
     async def corona_country(self, ctx, country):
-        """Verilen ülkenin virüsü istatistiklerini görüntüler."""
+        """Verilen ülkenin virüs istatistiklerini görüntüler."""
 
         async with ctx.typing():
             country_stats = await self.covid19.get_country_stats(country)
@@ -260,13 +255,47 @@ class Info(commands.Cog, name="Information"):
         embed.title = f"COVID-19 Virüsü İstatistikleri ({country})"
 
         embed.add_field(name="Doğrulanan Vaka", value=f"{confirmed:,d}")
-        embed.add_field(name="Ölen Kişi", value=f"{recovered:,d}")
-        embed.add_field(name="İyileşen Kişi", value=f"{deaths:,d}")
+        embed.add_field(name="İyileşen Kişi", value=f"{recovered:,d}")
+        embed.add_field(name="Ölen Kişi", value=f"{deaths:,d}")
         embed.add_field(name="İyileşme Oranı", value=f"{recovery_rate}%")
         embed.add_field(name="Ölüm Oranı", value=f"{mortality_rate}%")
         embed.add_field(name="\u200b", value="\u200b")
 
         embed.set_footer(text=f"Son güncelleme: {country_stats['lastUpdate']}")
+        await ctx.send(embed=embed)
+
+    @corona.command(name="top", aliases=["üst"])
+    async def corona_top(self, ctx):
+        """Virüsden en çok etkilenen ülkeleri listeler."""
+
+        async with ctx.typing():
+            top = await self.covid19.get_top()
+
+        embed = discord.Embed(color=self.bot.embed_color)
+        embed.set_thumbnail(url=self.corona_image)
+        embed.title = f"En Çok COVID-19 Virüslü Vaka Bulunan {(len(top))} Ülke"
+
+        for country in top:
+            country_region = country["countryRegion"]
+
+            c = await self.covid19.get_country_stats(country_region)
+            confirmed = c["confirmed"]
+            recovered = c["recovered"]
+            deaths = c["deaths"]
+
+            value = f"Vaka: {confirmed:,d}\nÖlen: {recovered:,d}\nİyileşen: {deaths:,d}"
+            embed.add_field(name=country_region, value=value)
+
+        await ctx.send(embed=embed)
+
+    @corona.command(name="global", aliases=["küresel"])
+    async def corona_global(self, ctx):
+        """Dünya geneli virüs istatistiklerini görsel olarak paylaşır."""
+                
+        embed = discord.Embed(color=self.bot.embed_color)
+        embed.title = f"COVID-19 Virüsü Global İstatistik Grafiği"
+        embed.set_image(url="https://covid19.mathdro.id/api/og")
+        
         await ctx.send(embed=embed)
 
     @corona.command(name="türkiye")
@@ -280,7 +309,7 @@ class Info(commands.Cog, name="Information"):
         embed.description = f"Kaynak: [{url}]({url})"
 
         async with ctx.typing():
-            async with self.bot.session.get(url) as resp:
+            async with self.bot.session.get(url, ssl=sslcontext) as resp:
                 resp = await resp.text()
             soup = BeautifulSoup(resp, "html.parser")
 
@@ -314,33 +343,9 @@ class Info(commands.Cog, name="Information"):
 
         await ctx.send(file=file, embed=embed)
 
-    @corona.command(name="top", aliases=["üst"])
-    async def corona_top(self, ctx):
-        """Virüsden en çok etkilenen 12 ülkeyi listeler."""
-
-        async with ctx.typing():
-            top = await self.covid19.get_top()
-
-        embed = discord.Embed(color=self.bot.embed_color)
-        embed.set_thumbnail(url=self.corona_image)
-        embed.title = f"En Çok COVID-19 Virüslü Vaka Bulunan {(len(top))} Ülke"
-
-        for country in top:
-            country_region = country["countryRegion"]
-
-            c = await self.covid19.get_country_stats(country_region)
-            confirmed = c["confirmed"]
-            recovered = c["recovered"]
-            deaths = c["deaths"]
-
-            value = f"Vaka: {confirmed:,d}\nÖlen: {recovered:,d}\nİyileşen: {deaths:,d}"
-            embed.add_field(name=country_region, value=value)
-
-        await ctx.send(embed=embed)
-
     @corona.command(name="info", aliases=["bilgi"])
     async def corona_info(self, ctx):
-        """COVID-19 virüsü hakkında bilgi verir."""
+        """Virüsü hakkında detaylı bilgi verir."""
         pass
 
     @corona.command(name="about", aliases=["hakkında"])
@@ -356,7 +361,7 @@ class Info(commands.Cog, name="Information"):
         embed = discord.Embed(color=self.bot.embed_color)
         embed.title = f"COVID-19 API Hakkında"
         embed.description = (
-            f"Durum: `{resp.status} {resp.reason}`\n"
+            f"Durum: {resp.status} {resp.reason}\n"
             f"API adresi: [{base_url}]({base_url})\n"
             f"Kaynak kod: [{source}]({source})\n"
         )
