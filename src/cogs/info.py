@@ -99,9 +99,9 @@ class Info(commands.Cog, name="Information"):
         self.corona_image = "https://i.imgur.com/PZ5r1IB.png"
         self.reload_icon = "https://i.imgur.com/aouXufT.png"
 
-        self.gold = "<:gold:694271455189270580>"
-        self.green = "<:green:694271455449448458>"
-        self.red = "<:red:694271455483002890>"
+        self.gold = "<:gold:694666442913611847>"
+        self.green = "<:green:694666519174578176>"
+        self.red = "<:red:694666443215863838>"
 
     async def get_image_bytes(self, image):
         async with self.bot.session.get(str(image)) as response:
@@ -180,7 +180,8 @@ class Info(commands.Cog, name="Information"):
     def draw_horizontal_chart(self, confirmed, recovered, deaths):
         margin = 25
         mh = margin / 2
-        w, h = (500 - margin, 15)
+        w, h = (500 - margin, 40 - margin) 
+        
         gold = (241, 196, 15)  # f1c40f
         green = (46, 204, 113)  # 2ecc71
         red = (231, 76, 60)  # e74c3c
@@ -190,22 +191,16 @@ class Info(commands.Cog, name="Information"):
         recovery_rate = recovered / total * w
         mortality_rate = deaths / total * w
 
-        img = Image.new("RGB", (w + margin, h), (47, 49, 54))
+        img = Image.new("RGB", (w + margin, h + margin), (47, 49, 54))
         draw = ImageDraw.Draw(img)
 
-        draw.rectangle((mh, 0, mh + case_rate, h), fill=gold)
-        draw.rectangle(
-            (mh + case_rate, 0, mh + case_rate + recovery_rate, h), fill=green
-        )
-        draw.rectangle(
-            (
-                mh + case_rate + recovery_rate,
-                0,
-                mh + case_rate + recovery_rate + mortality_rate,
-                h,
-            ),
-            fill=red,
-        )
+        x = case_rate + mh
+        y = recovery_rate + x
+        z = mortality_rate + y
+
+        draw.rectangle((mh, mh, x, h + mh), fill=gold)
+        draw.rectangle((x, mh, y, h + mh), fill=green)
+        draw.rectangle((y, mh, z, h + mh), fill=red)
 
         output_buffer = BytesIO()
         img.save(output_buffer, "png")
