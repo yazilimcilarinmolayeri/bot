@@ -233,9 +233,9 @@ class Info(commands.Cog, name="Information"):
             flag = country.flag
             confirmed = country.confirmed
             recovered = country.recovered
-            deaths = country.deaths
+            deaths = country.deaths 
 
-            value = f"Vaka: {confirmed:,d}\nÖlen: {recovered:,d}\nİyileşen: {deaths:,d}"
+            value = f"Vaka: {confirmed:,d}\nİyileşen: {recovered:,d}\nÖlen: {deaths:,d}"
             embed.add_field(name=f"{flag} {country_region}", value=value)
 
         await ctx.send(embed=embed)
