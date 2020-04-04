@@ -58,6 +58,10 @@ python3.7 src/bot.py
 ## Katkı ve Test
 Düzenleniyor...
 
+## Ekran Görüntüleri
+
+![GIF](https://i.imgur.com/6yTRFq1.gif)
+
 ## Kütüphaneler
 * [emoji](https://github.com/carpedm20/emoji)
 * [arrow](https://github.com/crsmithdev/arrow)
