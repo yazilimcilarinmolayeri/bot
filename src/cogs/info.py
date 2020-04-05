@@ -287,28 +287,28 @@ class Info(commands.Cog, name="Information"):
 
         await ctx.send(embed=embed)
 
-    # @commands.cooldown(1, 5, commands.BucketType.user)
-    # @commands.command(aliases=["cvtr", "covid19tr"])
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.command(aliases=["cvtr", "covid19tr"])
     async def coronatr(self, ctx):
         """Sağlık Bakanlığının hazırladığı Türkiye durumunu görüntüler."""
 
-        url = "https://covid19.saglik.gov.tr/"
+        base_url = "https://covid19bilgi.saglik.gov.tr"
+        gunluk_vaka = "https://covid19bilgi.saglik.gov.tr/tr/gunluk-vaka.html"
 
         embed = discord.Embed(color=self.bot.embed_color)
         embed.title = f"Türkiye'deki Güncel COVID-19 Durumu"
-        embed.description = f"Kaynak: [{url}]({url})"
+        embed.description = f"Kaynak: [{base_url}]({base_url})"
 
         async with ctx.typing():
-            async with self.bot.session.get(url) as resp:
+            async with self.bot.session.get(gunluk_vaka) as resp:
                 resp = await resp.text()
             soup = BeautifulSoup(resp, "html.parser")
 
-        div = soup.find_all("div", attrs={"class": "col-sm-12 col-xs-12 col-lg-6"})
-        img1_url = url + div[0].find_all("img", attrs={"class": "img-fluid"})[0]["src"]
-        img2_url = url + div[1].find_all("img", attrs={"class": "img-fluid"})[0]["src"]
+        div = soup.find_all("div", attrs={"class": "_DblQBlAM__container"})
+        images = div[0].find_all("img")
 
-        img1_bytes = await self.get_image_bytes(img1_url)
-        img2_bytes = await self.get_image_bytes(img2_url)
+        img1_bytes = await self.get_image_bytes(base_url + images[0]["src"])
+        img2_bytes = await self.get_image_bytes(base_url + images[1]["src"])
 
         async with ctx.typing():
             img1 = Image.open(BytesIO(img1_bytes))
@@ -317,7 +317,7 @@ class Info(commands.Cog, name="Information"):
             img1_x, img1_y = img1.size
             img2_x, img2_y = img2.size
             size = (img1_x, img1_y + img2_y)
-            bg = Image.new("RGB", size, "white")
+            bg = Image.new("RGB", size, (0, 166, 163)) # 00a6a3
 
             bg.paste(img1, (0, 0))
             bg.paste(img2, (0, img1_y))
