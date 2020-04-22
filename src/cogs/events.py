@@ -156,7 +156,7 @@ class Events(commands.Cog):
                 await reaction_role.add_or_remove()
 
             if channel_id == config.beni_oku_channel_id:
-                await self.add_member(payload, standby_limit=3)
+                await self.add_member(payload, standby_limit=2)
 
     @commands.Cog.listener()
     async def on_raw_reaction_remove(self, payload):
