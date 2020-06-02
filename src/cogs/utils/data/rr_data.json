@@ -84,7 +84,8 @@
     "title": "Bot Geliştirme",
     "rr": {
       "notebook": "Discord.py",
-      "bookmark": "Discord.js"
+      "bookmark": "Discord.js",
+      "rocket": "YMYBot Geliştirme"
     }
   },
   "690869429747318814": {
@@ -103,7 +104,7 @@
       "robot_face": "Yapay Zeka",
       "scroll": "Kriptoloji",
       "artist_palette": "Grafik Tasarım",
-      "no_one_under_eighteen": "Im Over +18"
+      "no_one_under_eighteen": "I'm Over 18"
     }
   }
 }
