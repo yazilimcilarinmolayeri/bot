@@ -60,7 +60,7 @@ ymy_guild_id = 418887354699350028
 #
 
 beni_oku_channel_id = 609350584314626049
-beni_oku_message_id = 641621615238578207
+beni_oku_message_id = 428273380844765185
 
 rr_channel_id = 485084529443471390
 rr_role_message_ids = [
