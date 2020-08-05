@@ -45,7 +45,7 @@ class HTTPSession(aiohttp.ClientSession):
 
     def __del__(self):
         if not self.closed:
-            self.close()
+            await self.close()
 
 
 session = HTTPSession()
