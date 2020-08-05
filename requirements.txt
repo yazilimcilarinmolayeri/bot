@@ -5,5 +5,5 @@ psutil
 Pillow
 jishaku
 humanize
-discord.py
 beautifulsoup4
+git+https://github.com/Rapptz/discord.py@master
