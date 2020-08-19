@@ -233,7 +233,7 @@ class Info(commands.Cog, name="Information"):
             flag = country.flag
             confirmed = country.confirmed
             recovered = country.recovered
-            deaths = country.deaths 
+            deaths = country.deaths
 
             value = f"Vaka: {confirmed:,d}\nİyileşen: {recovered:,d}\nÖlen: {deaths:,d}"
             embed.add_field(name=f"{flag} {country_region}", value=value)
@@ -317,7 +317,7 @@ class Info(commands.Cog, name="Information"):
             img1_x, img1_y = img1.size
             img2_x, img2_y = img2.size
             size = (img1_x, img1_y + img2_y)
-            bg = Image.new("RGB", size, (0, 166, 163)) # 00a6a3
+            bg = Image.new("RGB", size, (0, 166, 163))  # 00a6a3
 
             bg.paste(img1, (0, 0))
             bg.paste(img2, (0, img1_y))

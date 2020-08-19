@@ -63,7 +63,7 @@ class Covid19:
         gstats["deaths"] = _global["deaths"]["value"]
 
         return gstats
-                    
+
     async def get_countries(self):
         """Virüs bulunan üleklerinin isim listesini döndürür."""
 
@@ -137,14 +137,14 @@ class Covid19:
             for name in names:
                 if country_name.lower() == name.lower():
                     status[0] = True
-                    
+
                     try:
                         status[1] = names
                     except KeyError:
                         status[1] = names[0]
 
                     return status
-                
+
         return status
 
     async def get_flag(self, country_name):
