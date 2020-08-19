@@ -27,6 +27,7 @@ extensions = [
     "cogs.fun",
     "cogs.misc",
     "cogs.help",
+    "cogs.tureng",
 ]
 
 
