@@ -1,27 +1,28 @@
-import discord
 import aiohttp
 import asyncio
-
-from discord.ext import commands
 from bs4 import BeautifulSoup as bs
 
-
-def setup(bot):
-    client.add_cog(Tureng(bot))
+import discord
+from discord.ext import commands
 
 
 class Tureng(commands.Cog):
-    def __init__(self, client):
-        self.client = client
+    def __init__(self, bot):
+        self.client = bot
 
     @commands.command()
     @commands.cooldown(1, 30, commands.BucketType.user)
     async def tureng(self, ctx, language, *, word):
         """
-        usage => .tureng {en_tr/tr_en} {word}
-
-        """
+        Türkçe-İngilizce sözlük komutu.
         
+        Örnek:
+            ymy+tureng en_tr query
+            ymy+tureng tr_en sorgu
+        
+        Geliştirici: Emir Kılıçaslan (realjtr) <<https://github.com/realJtr>>
+        """
+
         async with aiohttp.ClientSession() as cs:
             async with cs.get(f"https://tureng.com/tr/turkce-ingilizce/{word}") as resp:
                 text = await resp.read()
@@ -55,7 +56,7 @@ class Tureng(commands.Cog):
                         if len(a) == 0 and len(category) == 0:
                             pass
                         else:
-                            content.append(f"{category[1].text}-{a[1].text}")
+                            content.append(f"{category[1].text}$${a[1].text}")
 
                             # embed.add_field(name=f"{category[1].text}", value=f"{a[1].text}", inline=False)
                             # print(f'{category[1].text} - {a[1].text}')
@@ -69,7 +70,7 @@ class Tureng(commands.Cog):
                         if len(a) == 0 and len(category) == 0:
                             pass
                         else:
-                            content.append(f"{category[1].text}-{a[1].text}")
+                            content.append(f"{category[1].text}$${a[1].text}")
 
                             # embed.add_field(name=f"{category[1].text}", value=f"{a[1].text}", inline=False)
 
@@ -92,7 +93,7 @@ class Tureng(commands.Cog):
                 b = 5
 
                 embed = discord.Embed(
-                    colour=discord.Colour.red(),
+                    colour=self.client.embed_color,
                     title=f"Kelime: {word}",
                     description="İngilizce -> Türkçe",
                 )
@@ -100,7 +101,7 @@ class Tureng(commands.Cog):
                 # if there is only one page avoid from the index error.
                 if x <= 5:
                     for word in range(a, x):
-                        category, text = content[word].split("-")
+                        category, text = content[word].split("$$")
                         embed.add_field(
                             name=f"{category}", value=f"{text}", inline=False
                         )
@@ -112,7 +113,7 @@ class Tureng(commands.Cog):
 
                 else:
                     for word in range(a, b):
-                        category, text = content[word].split("-")
+                        category, text = content[word].split("$$")
                         embed.add_field(
                             name=f"{category}", value=f"{text}", inline=False
                         )
@@ -152,7 +153,7 @@ class Tureng(commands.Cog):
 
                                     for word in range(a, x):
 
-                                        category, text = content[word].split("-")
+                                        category, text = content[word].split("$$")
                                         # embed.add_field(name=f"{category}", value=f"{text}", inline=False)
                                         embed.set_field_at(
                                             counter,
@@ -170,7 +171,7 @@ class Tureng(commands.Cog):
                                 else:
                                     counter = 0
                                     for word in range(a, b):
-                                        category, text = content[word].split("-")
+                                        category, text = content[word].split("$$")
                                         embed.set_field_at(
                                             counter,
                                             name=f"{category}",
@@ -194,7 +195,7 @@ class Tureng(commands.Cog):
                                 embed.clear_fields()
                                 for word in range(a, b):
 
-                                    category, text = content[word].split("-")
+                                    category, text = content[word].split("$$")
                                     # embed.add_field(name=f"{category}", value=f"{text}", inline=False)
                                     # embed.set_field_at(counter, name=f"{category}", value=f"{text}", inline=False)
 
@@ -245,7 +246,7 @@ class Tureng(commands.Cog):
                         if len(a) == 0 and len(category) == 0:
                             pass
                         else:
-                            content.append(f"{category[1].text}-{a[1].text}")
+                            content.append(f"{category[1].text}$${a[1].text}")
 
                             # embed.add_field(name=f"{category[1].text}", value=f"{a[1].text}", inline=False)
                             # print(f'{category[1].text} - {a[1].text}')
@@ -259,7 +260,7 @@ class Tureng(commands.Cog):
                         if len(a) == 0 and len(category) == 0:
                             pass
                         else:
-                            content.append(f"{category[1].text}-{a[1].text}")
+                            content.append(f"{category[1].text}$${a[1].text}")
 
                             # embed.add_field(name=f"{category[1].text}", value=f"{a[1].text}", inline=False)
 
@@ -282,14 +283,14 @@ class Tureng(commands.Cog):
                 b = 5
 
                 embed = discord.Embed(
-                    colour=discord.Colour.red(),
+                    colour=self.client.embed_color,
                     title=f"Kelime: {word}",
                     description="Türkçe -> İngilizce",
                 )
 
                 if x <= 5:
                     for word in range(a, x):
-                        category, text = content[word].split("-")
+                        category, text = content[word].split("$$")
                         embed.add_field(
                             name=f"{category}", value=f"{text}", inline=False
                         )
@@ -300,7 +301,7 @@ class Tureng(commands.Cog):
 
                 else:
                     for word in range(a, b):
-                        category, text = content[word].split("-")
+                        category, text = content[word].split("$$")
                         embed.add_field(
                             name=f"{category}", value=f"{text}", inline=False
                         )
@@ -339,7 +340,7 @@ class Tureng(commands.Cog):
                                             embed.remove_field(-delete)
 
                                     for word in range(a, x):
-                                        category, text = content[word].split("-")
+                                        category, text = content[word].split("$$")
                                         # embed.add_field(name=f"{category}", value=f"{text}", inline=False)
                                         embed.set_field_at(
                                             counter,
@@ -357,7 +358,7 @@ class Tureng(commands.Cog):
                                 else:
                                     counter = 0
                                     for word in range(a, b):
-                                        category, text = content[word].split("-")
+                                        category, text = content[word].split("$$")
                                         embed.set_field_at(
                                             counter,
                                             name=f"{category}",
@@ -380,7 +381,7 @@ class Tureng(commands.Cog):
                                 b -= 5
                                 embed.clear_fields()
                                 for word in range(a, b):
-                                    category, text = content[word].split("-")
+                                    category, text = content[word].split("$$")
                                     # embed.add_field(name=f"{category}", value=f"{text}", inline=False)
                                     # embed.set_field_at(counter, name=f"{category}", value=f"{text}", inline=False)
 
@@ -409,3 +410,7 @@ class Tureng(commands.Cog):
                             await message.delete()
                             break
                             # ending the loop if user doesn't react after x seconds
+
+
+def setup(bot):
+    bot.add_cog(Tureng(bot))
