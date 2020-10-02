@@ -86,8 +86,8 @@ class ReactionRole:
     async def add_or_remove(self):
         """Eklenen tepkiye göre kullanıcının rolü yok ise ekler, var ise siler."""
 
-        if self.member.bot:
-            return
+        # if self.member.bot:
+        #     return
 
         if self.role_check():
             await self.remove_role()
