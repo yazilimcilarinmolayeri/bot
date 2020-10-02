@@ -15,12 +15,8 @@ from discord.utils import get
 class ReactionRole:
     """Reaksiyon rol sınıfı."""
 
-    def __init__(self, bot, payload):
+    def __init__(self, bot):
         self.bot = bot
-        self.payload = payload
-        self.emoji = payload.emoji
-        self.guild = self.bot.get_guild(id=payload.guild_id)
-        self.member = self.guild.get_member(payload.user_id)
         self.get_data()
 
     def get_data(self):
@@ -83,11 +79,17 @@ class ReactionRole:
         await self.member.remove_roles(self.role)
         await self.member.send(f"\N{OUTBOX TRAY} `{self.role.name}` rolü silindi!")
 
-    async def add_or_remove(self):
+    async def add_or_remove(self, payload):
         """Eklenen tepkiye göre kullanıcının rolü yok ise ekler, var ise siler."""
 
-        # if self.member.bot:
-        #     return
+        self.payload = payload
+        self.emoji = payload.emoji
+        self.guild = self.bot.get_guild(id=payload.guild_id)
+        # ağğğğğğğğğğ
+        self.member = await self.guild.fetch_member(payload.user_id)
+
+        if self.member.bot:
+            return
 
         if self.role_check():
             await self.remove_role()

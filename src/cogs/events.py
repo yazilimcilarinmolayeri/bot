@@ -148,12 +148,12 @@ class Events(commands.Cog):
     async def on_raw_reaction_add(self, payload):
         guild_id = payload.guild_id
         channel_id = payload.channel_id
-
-        reaction_role = ReactionRole(self.bot, payload)
+        
+        reaction_role = ReactionRole(self.bot)
 
         if guild_id == config.ymy_guild_id:
             if channel_id == config.rr_channel_id:
-                await reaction_role.add_or_remove()
+                await reaction_role.add_or_remove(payload)
 
             if channel_id == config.beni_oku_channel_id:
                 await self.add_member(payload, standby_limit=2)
