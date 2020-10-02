@@ -84,8 +84,7 @@
     "title": "Bot Geliştirme",
     "rr": {
       "notebook": "Discord.py",
-      "bookmark": "Discord.js",
-      "rocket": "YMYBot Geliştirme"
+      "bookmark": "Discord.js"
     }
   },
   "690869429747318814": {
@@ -96,7 +95,7 @@
     }
   },
   "690869430334259241": {
-    "title": "Diğer Alan Rolleri",
+    "title": "Diğer Roller",
     "rr": {
       "clamp": "Algoritma",
       "floppy_disk": "Donanım",
@@ -104,6 +103,7 @@
       "robot_face": "Yapay Zeka",
       "scroll": "Kriptoloji",
       "artist_palette": "Grafik Tasarım",
+      "rocket": "YMY Geliştirici",
       "no_one_under_eighteen": "I'm Over 18"
     }
   }
