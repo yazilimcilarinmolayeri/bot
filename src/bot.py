@@ -7,6 +7,7 @@
 
 import ssl
 import aiohttp
+import warnings
 from collections import Counter
 
 import config
@@ -29,6 +30,8 @@ extensions = [
     "cogs.help",
     "cogs.tureng",
 ]
+
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 
 def get_prefix(bot, msg):
