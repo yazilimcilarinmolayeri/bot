@@ -120,7 +120,7 @@ class Events(commands.Cog):
         guild = self.bot.get_guild(id=payload.guild_id)
         channel = self.bot.get_channel(payload.channel_id)
         message = await channel.fetch_message(payload.message_id)
-        member = guild.get_member(payload.user_id)
+        member = guild.fetch_member(payload.user_id)
 
         ymy_role = get(guild.roles, name="YMY Üyesi")
 
