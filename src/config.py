@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#
+# hebele hübele
 
 from os import environ as env
 from ast import literal_eval as le
@@ -37,13 +37,13 @@ owner_ids = [
 # imgflip.com
 #
 # {"username": "", "password": ""}
-imgflip_api = le(env.get("imgflip_api"))
+# imgflip_api = le(env.get("imgflip_api"))
 
 #
 # screenshotapi.net
 #
 # {"token": ""}
-screenshot_api = le(env.get("screenshot_api"))
+# screenshot_api = le(env.get("screenshot_api"))
 
 
 # ============================Yazılımcıların Mola Yeri============================
