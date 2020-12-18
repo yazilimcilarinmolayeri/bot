@@ -90,6 +90,7 @@
   "690869429747318814": {
     "title": "Gömülü Sistemler",
     "rr": {
+      "high_voltage": "EE",
       "infinity": "Arduino",
       "strawberry": "Raspberry Pi"
     }
