@@ -136,7 +136,7 @@ class Events(commands.Cog):
             await message.remove_reaction(emoji=payload.emoji, member=member)
             await member.send(
                 "\N{SPEECH BALLOON} "
-                "Hadi ama dostum cidden bu kadar kısa sürede kuralları okudun mu?"
+                "Bu kadar kısa süre içerisinde o kuralları okuyamayacağını herkes biliyor. 1 dakika boyunca sunucuya girişini engelliyorum."
             )
         else:
             if not ymy_role.id in [r.id for r in member.roles]:
