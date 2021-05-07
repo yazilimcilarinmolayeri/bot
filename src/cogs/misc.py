@@ -67,7 +67,7 @@ class Misc(commands.Cog):
         
     @commands.command(aliases=["letmeegooglethat"])
     @commands.cooldown(1, 3, commands.BucketType.user)
-    async def google(self, ctx, keywords: str):
+    async def google(self, ctx, *, keywords: str):
         """Verilen keywordleri letmegooglethat'da aratır."""
 
         await ctx.send(
