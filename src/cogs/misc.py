@@ -64,6 +64,16 @@ class Misc(commands.Cog):
             r = await http.post(url="http://tinyurl.com/api-create.php", data=params)
 
         await ctx.send(f"\N{LINK SYMBOL} <{r}>")
+        
+    @commands.command(aliases=["letmeegooglethat"])
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    async def google(self, ctx, keywords: str):
+        """Verilen keywordleri letmegooglethat'da aratır."""
+        
+        keywords.replace(" ", "+")
+        keywords = "https://letmegooglethat.com/?q=" + keywords
+        
+        await ctx.send(f"{keywords}")    
 
     @commands.command(aliases=["ekrangörüntüsü"])
     @commands.cooldown(1, 30, commands.BucketType.user)
