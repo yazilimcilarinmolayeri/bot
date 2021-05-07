@@ -69,11 +69,10 @@ class Misc(commands.Cog):
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def google(self, ctx, keywords: str):
         """Verilen keywordleri letmegooglethat'da aratır."""
-        
-        keywords.replace(" ", "+")
-        keywords = "https://letmegooglethat.com/?q=" + keywords
-        
-        await ctx.send(f"{keywords}")    
+
+        await ctx.send(
+            "https://letmegooglethat.com/?q=" + keywords.replace(" ", "+")
+        )    
 
     @commands.command(aliases=["ekrangörüntüsü"])
     @commands.cooldown(1, 30, commands.BucketType.user)
