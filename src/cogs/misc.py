@@ -65,7 +65,7 @@ class Misc(commands.Cog):
 
         await ctx.send(f"\N{LINK SYMBOL} <{r}>")
         
-    @commands.command(aliases=["letmeegooglethat"])
+    @commands.command(aliases=["letmegooglethat"])
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def google(self, ctx, *, keywords: str):
         """Verilen keywordleri letmegooglethat'da aratır."""
