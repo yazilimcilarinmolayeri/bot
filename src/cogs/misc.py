@@ -72,7 +72,16 @@ class Misc(commands.Cog):
 
         await ctx.send(
             "https://letmegooglethat.com/?q=" + keywords.replace(" ", "+")
-        )    
+        )  
+        
+    @commands.command(aliases=["letmeduckduckgothat"])
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    async def duckduckgo(self, ctx, *, keywords: str):
+        """Verilen keywordleri letmeduckduckgothatforyou'da aratır."""
+
+        await ctx.send(
+            "https://lmddgtfy.net/?q=" + keywords.replace(" ", "+")
+        )         
 
     @commands.command(aliases=["ekrangörüntüsü"])
     @commands.cooldown(1, 30, commands.BucketType.user)
