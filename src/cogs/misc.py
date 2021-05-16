@@ -80,7 +80,7 @@ class Misc(commands.Cog):
         """Verilen keywordleri letmeduckduckgothatforyou'da aratır."""
 
         await ctx.send(
-            "https://lmddgtfy.net/?q" + keywords.replace(" ", "+")
+            "https://lmddgtfy.net/?q=" + keywords.replace(" ", "+")
         )         
 
     @commands.command(aliases=["ekrangörüntüsü"])
