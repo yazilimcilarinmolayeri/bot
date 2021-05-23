@@ -58,7 +58,7 @@ class Mod(commands.Cog, name="Moderation"):
         dmlog = self.bot.get_channel(687804890860486762)
         embed = discord.Embed(color=discord.Colour.green())
         embed.description = content
-        embed.set_author(name=user, icon_url=user.avatar_url)
+        embed.set_author(name=user, icon_url=user.avatar.url)
         embed.set_footer(text=f"ID: {user.id}")
 
         await dmlog.send(embed=embed)
