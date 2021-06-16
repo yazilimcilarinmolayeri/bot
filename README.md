@@ -1,5 +1,8 @@
 # :robot: YMYBot
 
+# UYARI: bu bot artık aktif olarak geliştirilmemektedir, lütfen ymybot-rw botuna pr atın.
+# WARNING: this bot isn't under develop anymore, please send pr to ymybot-rw.
+
 <p>
   <img src="https://img.shields.io/discord/418887354699350028?style=flat">
   <img src="https://img.shields.io/badge/python-3.7-blue">
