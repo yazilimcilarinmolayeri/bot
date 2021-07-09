@@ -65,7 +65,7 @@ class Events(commands.Cog):
     async def on_member_join(self, member):
         await meta.update_activity_name(self.bot)
         user = await self.bot.fetch_user(member.id)
-        await user.send("""\
+        await user.send("""
         Sunucuya hoş geldin. Lütfen soru sormadan önce bu kurallara dikkat et.
         > ```md
         YMY Raconu | Yardım alırken nelere dikkat etmelisin?
