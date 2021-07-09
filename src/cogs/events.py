@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 
@@ -64,6 +65,24 @@ class Events(commands.Cog):
     @commands.Cog.listener()
     async def on_member_join(self, member):
         await meta.update_activity_name(self.bot)
+        channel = await member.create_dm()
+        await channel.send("""\
+        Sunucuya hoş geldin. Lütfen soru sormadan önce bu kurallara dikkat et.
+        > ```md
+        YMY Raconu | Yardım alırken nelere dikkat etmelisin?
+
+        1. Yanlış kanallarda (özellikle #sohbet kanalında) yardım istemeyin.
+        2. Yardım alınacak konu hakkında detaylı bilgi verin.
+        3. 'Yardım edin!', 'Bunu biliyor musunuz?' vb. isteklerde bulunmayın.
+        4. Yardım alacağınız konuya ilişkin rolü mesaja ekleyin.
+        5. Yardım almadan önce arama motorlarını kullandığınıza emin olun.
+
+        Paylaşımcı olun, davetkar olun, dışadönük olun, düşünceli olun.
+
+        # Sunucuya katıldığunuz andan itibaren bu kuralları kabul etmiş 
+        # sayılacaksınız, yeni katılmanıza bakılmaksızın uyarı verilecektir.
+        ```
+        """)
 
     @commands.Cog.listener()
     async def on_member_remove(self, member):
