@@ -17,7 +17,7 @@
   "690869406623989790": {
     "title": "Diğer Diller",
     "rr": {
-      "compass": "Type Script",
+      "compass": "TypeScript",
       "soap": "Kotlin",
       "goat": "Go",
       "gem_stone": "Ruby",
@@ -41,7 +41,9 @@
       "wheel_of_dharma": "ReactJS",
       "shield": "Angular",
       "triangular_ruler": "Laravel",
+      "fire": "CodeIgniter",
       "horse_face": "Django",
+      "hot_pepper": "Flask",
       "cactus": "ASP.NET",
       "framed_picture": "Bootstrap"
     }
@@ -53,7 +55,9 @@
       "front-facing_baby_chick": "Android",
       "chart_increasing": "Flutter",
       "telephone": "Xamarin",
-      "atom_symbol": "React Native"
+      "atom_symbol": "React Native",
+      "dart": "Dart",
+      "bird": "SwiftUI"
     }
   },
   "690869408884719617": {
@@ -61,7 +65,8 @@
     "rr": {
       "crystal_ball": "Unity",
       "game_die": "Game Maker",
-      "nut_and_bolt": "Unreal Engine"
+      "nut_and_bolt": "Unreal Engine",
+      "chess_pawn": "PAWN"
     }
   },
   "690869427624738826": {
@@ -69,7 +74,11 @@
     "rr": {
       "package": "SQL",
       "abacus": "Oracle",
-      "bar_chart": "MySQL"
+      "bar_chart": "MySQL",
+      "feather": "SQLite",
+      "no_entry": "NoSQL",
+      "window": "MsSQL",
+      "elephant": "PostgreSQL"
     }
   },
   "690869428308672572": {
@@ -95,16 +104,27 @@
       "strawberry": "Raspberry Pi"
     }
   },
-  "690869430334259241": {
+  "691038009881264278": {
     "title": "Diğer Roller",
     "rr": {
+      "window": ".NET",
       "clamp": "Algoritma",
       "floppy_disk": "Donanım",
       "globe_with_meridians": "WordPress",
       "robot": "Yapay Zeka",
       "scroll": "Kriptoloji",
       "artist_palette": "Grafik Tasarım",
+      "whale": "Docker",
+      "desktop": "Serverless Computing",
       "no_one_under_eighteen": "I'm Over 18"
+    }
+  },
+  "690869430334259241": {
+    "title": "Grafiksel Arabirim Gliştirme",
+    "rr": {
+      "atom": "ElectronJS",
+      "green_book": "Qt",
+      "ice_cube": "Gtk",
     }
   }
 }
