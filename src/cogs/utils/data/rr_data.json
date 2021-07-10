@@ -124,7 +124,7 @@
     "rr": {
       "atom": "ElectronJS",
       "green_book": "Qt",
-      "ice_cube": "Gtk",
+      "ice_cube": "Gtk"
     }
   }
 }
