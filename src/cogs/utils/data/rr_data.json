@@ -3,14 +3,14 @@
     "title": "Popüler Diller",
     "rr": {
       "snake": "Python",
-      "hot_beverage": "Java",
-      "dim_button": "JavaScript",
-      "keycap_#": "C#",
+      "coffee": "Java",
+      "low_brightness": "JavaScript",
+      "hash": "C#",
       "elephant": "PHP",
       "books": "C",
-      "hammer_and_wrench": "C++",
-      "linked_paperclips": "R",
-      "optical_disk": "Objective-C",
+      "tools": "C++",
+      "paperclips": "R",
+      "cd": "Objective-C",
       "bird": "Swift"
     }
   },
@@ -20,14 +20,14 @@
       "compass": "TypeScript",
       "soap": "Kotlin",
       "goat": "Go",
-      "gem_stone": "Ruby",
+      "gem": "Ruby",
       "dart": "Visual Basic",
       "gear": "Rust",
-      "camel": "Perl",
+      "dromedary_camel": "Perl",
       "last_quarter_moon": "Lua",
       "mushroom": "Delphi",
       "white_flower": "Scala",
-      "spiral_shell": "Shell Programlama",
+      "shell": "Shell Programlama",
       "jigsaw": "Assembly"
     }
   },
@@ -42,20 +42,20 @@
       "shield": "Angular",
       "triangular_ruler": "Laravel",
       "fire": "CodeIgniter",
-      "horse_face": "Django",
+      "horse": "Django",
       "hot_pepper": "Flask",
       "cactus": "ASP.NET",
-      "framed_picture": "Bootstrap"
+      "frame_photo": "Bootstrap"
     }
   },
   "690869408108773427": {
     "title": "Mobil Geliştirme",
     "rr": {
       "green_apple": "iOS",
-      "front-facing_baby_chick": "Android",
-      "chart_increasing": "Flutter",
+      "hatched_chick": "Android",
+      "chart_with_upwards_trend": "Flutter",
       "telephone": "Xamarin",
-      "atom_symbol": "React Native",
+      "atom": "React Native",
       "dart": "Dart",
       "bird": "SwiftUI"
     }
@@ -85,7 +85,7 @@
     "title": "İşletim Sistemleri",
     "rr": {
       "penguin": "GNU/Linux",
-      "red_apple": "MacOS",
+      "apple": "MacOS",
       "radioactive": "Windows"
     }
   },
@@ -99,7 +99,7 @@
   "690869429747318814": {
     "title": "Gömülü Sistemler",
     "rr": {
-      "high_voltage": "EE",
+      "zap": "EE",
       "infinity": "Arduino",
       "strawberry": "Raspberry Pi"
     }
@@ -108,15 +108,15 @@
     "title": "Diğer Roller",
     "rr": {
       "window": ".NET",
-      "clamp": "Algoritma",
+      "compression": "Algoritma",
       "floppy_disk": "Donanım",
       "globe_with_meridians": "WordPress",
       "robot": "Yapay Zeka",
       "scroll": "Kriptoloji",
-      "artist_palette": "Grafik Tasarım",
+      "art": "Grafik Tasarım",
       "whale": "Docker",
       "desktop": "Serverless Computing",
-      "no_one_under_eighteen": "I'm Over 18"
+      "underage": "I'm Over 18"
     }
   },
   "690869430334259241": {
